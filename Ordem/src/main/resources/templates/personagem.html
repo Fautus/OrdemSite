@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ordem Up — Personagens</title>
+<link rel="stylesheet" href="/css/personagem.css">
+</head>
+<body>
+	<header class="topbar">
+		<a class="brand" href="/"><span class="brand-mark">✦</span><span><b>ORDEM
+					UP</b><small>GERENCIADOR DE PERSONAGENS</small></span></a>
+		<nav class="main-nav">
+    <a href="/">⌂ Início</a>
+
+    <button type="button" class="nav-tab selected"
+        data-view="personagens">♟ Personagens</button>
+
+    <button type="button" class="nav-tab"
+        data-view="pericias">▤ Perícias</button>
+
+    <button type="button" class="nav-tab"
+        data-view="rituais">✧ Rituais</button>
+
+    <button type="button" class="nav-tab"
+        data-view="poderes-classe">⚔ Poderes de Classe</button>
+
+    <button type="button" class="nav-tab"
+        data-view="poderes-paranormais">◈ Poderes Paranormais</button>
+
+    <button type="button" class="nav-tab"
+        data-view="condicoes">◇ Condições</button>
+        
+        <button type="button" class="nav-tab"
+    data-view="origens">✧ Origens</button>
+
+<button type="button" class="nav-tab"
+    data-view="trilhas">◈ Trilhas</button>
+</nav>
+	</header>
+
+	<main class="app-shell">
+		<aside class="roster" data-view-content="personagens">
+			<div class="section-title">
+				<span>PERSONAGENS</span><span id="total-personagens">00</span>
+			</div>
+			<input id="pesquisa-personagem" class="search"
+				placeholder="⌕  Buscar personagem..." oninput="filtrarPersonagens()">
+			<div id="lista-personagens" class="roster-list"></div>
+			<button class="btn btn-red btn-full" onclick="novoPersonagem()">＋
+				NOVO PERSONAGEM</button>
+			<div class="roster-note">SUA HISTÓRIA. SUAS ESCOLHAS.</div>
+		</aside>
+
+		<section class="workspace" data-view-content="personagens">
+			<div class="page-heading">
+				<div>
+					<p class="eyebrow">ARQUIVO DE AGENTES / FICHA</p>
+					<h1 id="titulo-pagina">SELECIONE UM PERSONAGEM</h1>
+					<p class="muted">Gerencie os dados e prepare-se para a próxima
+						missão.</p>
+				</div>
+				<div class="heading-actions">
+					<button class="btn btn-outline" id="btn-cancelar"
+						onclick="cancelarEdicao()">CANCELAR</button>
+					<button class="btn btn-red" onclick="salvarPersonagem()">▣
+						SALVAR FICHA</button>
+				</div>
+			</div>
+
+			<div class="character-layout">
+				<section class="identity panel">
+					<div class="portrait-frame">
+						<div class="portrait-placeholder">✦</div>
+						<span class="portrait-label">ARQUIVO CONFIDENCIAL</span>
+					</div>
+					<label class="field-label" for="nome-personagem">NOME DO
+						PERSONAGEM <i>*</i>
+					</label> <input id="nome-personagem" class="field"
+						placeholder="Ex.: Carlos" required> <label
+						class="field-label" for="jogador-personagem">NOME DO
+						JOGADOR <i>*</i>
+					</label> <input id="jogador-personagem" class="field"
+						placeholder="Quem controla este agente?"> <label
+						class="field-label" for="nivel-personagem">NÍVEL</label> <input
+						id="nivel-personagem" class="field short-field" type="number"
+						min="1" value="1">
+					<div class="divider-title">
+						<span>ATRIBUTOS</span>
+					</div>
+					<div class="stat-row">
+						<span class="stat-icon red">✊</span><label for="forca-personagem">Força</label><input
+							id="forca-personagem" class="stat-input" type="number" min="0"
+							value="0">
+					</div>
+					<div class="stat-row">
+						<span class="stat-icon green">➤</span><label
+							for="destreza-personagem">Destreza</label><input
+							id="destreza-personagem" class="stat-input" type="number" min="0"
+							value="0">
+					</div>
+					<div class="stat-row">
+						<span class="stat-icon blue">◈</span><label
+							for="inteligencia-personagem">Inteligência</label><input
+							id="inteligencia-personagem" class="stat-input" type="number"
+							min="0" value="0">
+					</div>
+					<div class="stat-row">
+						<span class="stat-icon purple">◉</span><label
+							for="vontade-personagem">Vontade</label><input
+							id="vontade-personagem" class="stat-input" type="number" min="0"
+							value="0">
+					</div>
+					<div class="stat-row">
+						<span class="stat-icon gold">⬡</span><label
+							for="fortitude-personagem">Fortitude</label><input
+							id="fortitude-personagem" class="stat-input" type="number"
+							min="0" value="0">
+					</div>
+				</section>
+
+				<section class="details-column">
+					
+<div class="tabs">
+    <button type="button" class="tab active" data-tab="pericias">
+        ✦ PERÍCIAS
+    </button>
+    <button type="button" class="tab" data-tab="itens">
+        ⚔ ITENS
+    </button>
+    <button type="button" class="tab" data-tab="habilidades">
+        ◈ HABILIDADES
+    </button>
+    <button type="button" class="tab" data-tab="descricao">
+        ▤ DESCRIÇÃO
+    </button>
+    <button type="button" class="tab" data-tab="historico">
+        ◷ HISTÓRICO
+    </button>
+    <button type="button" class="tab" data-tab="notas">
+        ▣ NOTAS
+    </button>
+</div>
+
+					<section class="panel tab-panel active" id="tab-pericias">
+						<div class="panel-heading">
+							<div>
+								<p class="eyebrow">CAPACIDADES DO AGENTE</p>
+								<h2>Perícias do personagem</h2>
+								<p class="muted">Defina os valores das perícias desta ficha.</p>
+							</div>
+							<button class="btn btn-outline"
+								onclick="adicionarPericiaManual()">＋ ADICIONAR</button>
+						</div>
+						<div id="campos-pericias" class="skills-list">
+							<p class="muted">Carregando perícias disponíveis...</p>
+						</div>
+					</section>
+					
+					
+<!-- ABA: ITENS DO PERSONAGEM -->
+<section class="panel tab-panel" id="tab-itens">
+    <div class="panel-heading">
+        <div>
+            <p class="eyebrow">EQUIPAMENTO DO AGENTE</p>
+            <h2>Itens do personagem</h2>
+            <p class="muted">
+                Consulte os itens carregados por este personagem.
+            </p>
+        </div>
+    </div>
+
+    <div id="lista-itens-personagem" class="catalog-list">
+        <p class="muted">
+            Os itens do personagem serão exibidos aqui.
+        </p>
+    </div>
+</section>
+
+<!-- ABA: HABILIDADES DO PERSONAGEM -->
+<section class="panel tab-panel" id="tab-habilidades">
+    <div class="panel-heading">
+        <div>
+            <p class="eyebrow">CAPACIDADES DO AGENTE</p>
+            <h2>Habilidades</h2>
+            <p class="muted">
+                Trilha, poderes de classe e poderes paranormais.
+            </p>
+        </div>
+    </div>
+
+    <div class="habilidade-grupo">
+        <h3>Trilha</h3>
+        <div id="trilha-personagem">
+            <p class="muted">
+                Nenhuma trilha vinculada.
+            </p>
+        </div>
+    </div>
+
+    <div class="habilidade-grupo">
+        <h3>Poderes de classe</h3>
+        <div id="poderes-classe-personagem">
+            <p class="muted">
+                Nenhum poder de classe vinculado.
+            </p>
+        </div>
+    </div>
+
+    <div class="habilidade-grupo">
+        <h3>Poderes paranormais</h3>
+        <div id="poderes-paranormais-personagem">
+            <p class="muted">
+                Nenhum poder paranormal vinculado.
+            </p>
+        </div>
+    </div>
+</section>
+					
+					
+					<section class="panel tab-panel" id="tab-descricao">
+						<div class="panel-heading">
+							<div>
+								<p class="eyebrow">IDENTIDADE</p>
+								<h2>Descrição</h2>
+							</div>
+						</div>
+						<textarea id="descricao-personagem" class="field text-area"
+							placeholder="Aparência, personalidade e características..."></textarea>
+					</section>
+					<section class="panel tab-panel" id="tab-historico">
+						<div class="panel-heading">
+							<div>
+								<p class="eyebrow">ANTES DA MISSÃO</p>
+								<h2>Histórico</h2>
+							</div>
+						</div>
+						<textarea id="historico-personagem" class="field text-area"
+							placeholder="Conte a história deste personagem..."></textarea>
+					</section>
+					<section class="panel tab-panel" id="tab-notas">
+						<div class="panel-heading">
+							<div>
+								<p class="eyebrow">ANOTAÇÕES PRIVADAS</p>
+								<h2>Notas</h2>
+							</div>
+						</div>
+						<textarea id="notas-personagem" class="field text-area"
+							placeholder="Pistas, objetivos e anotações..."></textarea>
+					</section>
+					<section class="summary panel">
+						<div class="summary-head">
+							<span>▤</span>
+							<h2>RESUMO DO PERSONAGEM</h2>
+						</div>
+						<div class="summary-grid">
+							<div>
+								<p>
+									<span>AGENTE</span><b id="resumo-nome">—</b>
+								</p>
+								<p>
+									<span>JOGADOR</span><b id="resumo-jogador">—</b>
+								</p>
+								<p>
+									<span>NÍVEL</span><b id="resumo-nivel">1</b>
+								</p>
+							</div>
+							<div>
+								<p>
+									<span>FOR</span><b id="resumo-forca">0</b>
+								</p>
+								<p>
+									<span>DES</span><b id="resumo-destreza">0</b>
+								</p>
+								<p>
+									<span>INT</span><b id="resumo-inteligencia">0</b>
+								</p>
+								<p>
+									<span>VON</span><b id="resumo-vontade">0</b>
+								</p>
+								<p>
+									<span>FORt</span><b id="resumo-fortitude">0</b>
+								</p>
+							</div>
+							<blockquote>
+								“O próximo capítulo<br>depende de você.”
+							</blockquote>
+						</div>
+					</section>
+					<div class="bottom-actions">
+						<button class="btn btn-danger-outline" id="btn-excluir"
+							onclick="excluirPersonagemAtual()" disabled>▤ EXCLUIR
+							PERSONAGEM</button>
+						<span id="status-ficha" class="muted">Alterações ainda não
+							salvas</span>
+					</div>
+				</section>
+			</div>
+		</section>
+		
+		 <section class="catalog-view"
+            data-view-content="pericias" hidden>
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">ARQUIVO DE AGENTES</p>
+                    <h1>PERÍCIAS</h1>
+                    <p class="muted">Consulte as perícias cadastradas.</p>
+                </div>
+            </div>
+
+            <div class="panel catalog-panel">
+                <div class="panel-heading">
+                    <h2>Catálogo de perícias</h2>
+                    <span id="total-pericias">00 registros</span>
+                </div>
+                <div id="lista-catalogo-pericias" class="catalog-list">
+                    <p class="muted">Carregando perícias...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: RITUAIS -->
+        <section class="catalog-view"
+            data-view-content="rituais" hidden>
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">ARQUIVO PARANORMAL</p>
+                    <h1>RITUAIS</h1>
+                    <p class="muted">Consulte os rituais cadastrados.</p>
+                </div>
+            </div>
+
+            <div class="panel catalog-panel">
+                <div class="panel-heading">
+                    <h2>Catálogo de rituais</h2>
+                    <span id="total-rituais">00 registros</span>
+                </div>
+                <div id="lista-catalogo-rituais" class="catalog-list">
+                    <p class="muted">Carregando rituais...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: PODERES DE CLASSE -->
+        <section class="catalog-view"
+            data-view-content="poderes-classe" hidden>
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">ARQUIVO DE AGENTES</p>
+                    <h1>PODERES DE CLASSE</h1>
+                    <p class="muted">Consulte os poderes de classe cadastrados.</p>
+                </div>
+            </div>
+
+            <div class="panel catalog-panel">
+                <div class="panel-heading">
+                    <h2>Catálogo de poderes de classe</h2>
+                    <span id="total-poderes-classe">00 registros</span>
+                </div>
+                <div id="lista-catalogo-poderes-classe" class="catalog-list">
+                    <p class="muted">Carregando poderes...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: PODERES PARANORMAIS -->
+        <section class="catalog-view"
+            data-view-content="poderes-paranormais" hidden>
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">ARQUIVO PARANORMAL</p>
+                    <h1>PODERES PARANORMAIS</h1>
+                    <p class="muted">Consulte os poderes paranormais cadastrados.</p>
+                </div>
+            </div>
+
+            <div class="panel catalog-panel">
+                <div class="panel-heading">
+                    <h2>Catálogo de poderes paranormais</h2>
+                    <span id="total-poderes-paranormais">00 registros</span>
+                </div>
+                <div id="lista-catalogo-poderes-paranormais" class="catalog-list">
+                    <p class="muted">Carregando poderes...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABA: CONDIÇÕES -->
+        <section class="catalog-view"
+            data-view-content="condicoes" hidden>
+            <div class="page-heading">
+                <div>
+                    <p class="eyebrow">ARQUIVO DE AGENTES</p>
+                    <h1>CONDIÇÕES</h1>
+                    <p class="muted">Consulte as condições cadastradas.</p>
+                </div>
+            </div>
+
+            <div class="panel catalog-panel">
+                <div class="panel-heading">
+                    <h2>Catálogo de condições</h2>
+                    <span id="total-condicoes">00 registros</span>
+                </div>
+                <div id="lista-catalogo-condicoes" class="catalog-list">
+                    <p class="muted">Carregando condições...</p>
+                </div>
+            </div>
+        </section>
+		
+		
+<!-- ABA: ORIGENS -->
+<section class="catalog-view"
+    data-view-content="origens" hidden>
+
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">ARQUIVO DE AGENTES / IDENTIDADES</p>
+            <h1>ORIGENS</h1>
+            <p class="muted">Consulte as origens cadastradas no sistema.</p>
+        </div>
+    </div>
+
+    <div class="panel catalog-panel">
+        <div class="panel-heading">
+            <h2>Catálogo de origens</h2>
+            <span id="total-origens">00 registros</span>
+        </div>
+
+        <div id="lista-catalogo-origens" class="catalog-list">
+            <p class="muted">Carregando origens...</p>
+        </div>
+    </div>
+</section>
+
+<!-- ABA: TRILHAS -->
+<section class="catalog-view"
+    data-view-content="trilhas" hidden>
+
+    <div class="page-heading">
+        <div>
+            <p class="eyebrow">ARQUIVO DE AGENTES / ESPECIALIZAÇÕES</p>
+            <h1>TRILHAS</h1>
+            <p class="muted">Consulte as trilhas cadastradas no sistema.</p>
+        </div>
+    </div>
+
+    <div class="panel catalog-panel">
+        <div class="panel-heading">
+            <h2>Catálogo de trilhas</h2>
+            <span id="total-trilhas">00 registros</span>
+        </div>
+
+        <div id="lista-catalogo-trilhas" class="catalog-list">
+            <p class="muted">Carregando trilhas...</p>
+        </div>
+    </div>
+</section>
+		
+		
+	</main>
+	<script>
+
+let personagens = [];
+let periciasDisponiveis = [];
+let personagemAtualId = null;
+let periciasFicha = [];
+
+const campos = {
+  nome: 'nome-personagem', nomeJogador: 'jogador-personagem', nivel: 'nivel-personagem',
+  forca: 'forca-personagem', destreza: 'destreza-personagem', inteligencia: 'inteligencia-personagem',
+  vontade: 'vontade-personagem', fortitude: 'fortitude-personagem'
+};
+const $ = id => document.getElementById(id);
+const valor = id => $(id).value;
+
+document.querySelectorAll('.tab').forEach(botao => botao.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === botao));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === `tab-${botao.dataset.tab}`));
+}));
+Object.values(campos).forEach(id => $(id).addEventListener('input', atualizarResumo));
+
+async function iniciar() {
+  await carregarPericias();
+  await carregarPersonagens();
+  novoPersonagem();
+}
+async function carregarPersonagens() {
+  try {
+    const r = await fetch('/api/personagem/personagens');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    personagens = await r.json();
+    $('total-personagens').textContent = String(personagens.length).padStart(2,'0');
+    mostrarLista(personagens);
+  } catch (e) {
+    console.error(e);
+    $('lista-personagens').innerHTML = '<p class="muted">Não foi possível carregar os personagens. Confira a rota GET.</p>';
+  }
+}
+async function carregarPericias() {
+  try {
+	  const r = await fetch('/api/personagem/pericias');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    periciasDisponiveis = await r.json();
+  } catch (e) {
+    console.error('Falha ao carregar catálogo de perícias:', e);
+    $('campos-pericias').innerHTML = '<p class="muted">Não foi possível carregar as perícias. Confira a rota GET /api/pericia.</p>';
+  }
+}
+function mostrarLista(lista) {
+  const container = $('lista-personagens'); container.innerHTML = '';
+  if (!lista.length) { container.innerHTML = '<p class="muted">Nenhum personagem cadastrado ainda.</p>'; return; }
+  lista.forEach(p => {
+    const b = document.createElement('button');
+    b.className = `roster-card ${p.id === personagemAtualId ? 'active' : ''}`;
+    b.innerHTML = `<span class="roster-avatar">♟</span><span><b></b><small>NÍVEL ${p.nivel ?? 1}</small></span>`;
+    b.querySelector('b').textContent = p.nome || 'Sem nome';
+    b.onclick = () => selecionarPersonagem(p.id);
+    container.appendChild(b);
+  });
+}
+function filtrarPersonagens() {
+  const q = valor('pesquisa-personagem').toLowerCase();
+  mostrarLista(personagens.filter(p => (p.nome || '').toLowerCase().includes(q)));
+}
+function novoPersonagem() {
+  personagemAtualId = null;
+  Object.entries(campos).forEach(([k,id]) => $(id).value = ['nivel'].includes(k) ? 1 : ['nome','nomeJogador'].includes(k) ? '' : 0);
+  periciasFicha = [];
+  renderizarPericias();
+  $('titulo-pagina').textContent = 'NOVO PERSONAGEM';
+  $('btn-excluir').disabled = true;
+  $('status-ficha').textContent = 'Nova ficha — preencha os dados e salve.';
+  document.querySelectorAll('.roster-card').forEach(c => c.classList.remove('active'));
+  atualizarResumo();
+}
+function selecionarPersonagem(id) {
+  const p = personagens.find(x => x.id === id);
+  if (!p) return;
+  personagemAtualId = p.id;
+  Object.entries(campos).forEach(([k,field]) => $(field).value = p[k] ?? (k === 'nivel' ? 1 : 0));
+  periciasFicha = (p.pericias || []).map(rel => ({
+    periciaId: rel.pericia?.id,
+    nome: rel.pericia?.pericia || 'Perícia',
+    valorPericia: rel.valorPericia ?? 0
+  }));
+  renderizarPericias();
+  $('titulo-pagina').textContent = (p.nome || 'PERSONAGEM').toUpperCase();
+  $('btn-excluir').disabled = false;
+  $('status-ficha').textContent = 'Ficha carregada.';
+  mostrarLista(personagens.filter(x => (x.nome || '').toLowerCase().includes(valor('pesquisa-personagem').toLowerCase())));
+  atualizarResumo();
+}
+function renderizarPericias() {
+  const box = $('campos-pericias'); box.innerHTML = '';
+  if (!periciasDisponiveis.length) {
+    box.innerHTML = '<p class="muted">Catálogo vazio ou indisponível. Verifique a rota /api/pericia.</p>'; return;
+  }
+  const escolhidas = new Map(periciasFicha.map(p => [Number(p.periciaId), Number(p.valorPericia)]));
+  periciasDisponiveis.forEach(p => {
+    const id = Number(p.id);
+    const row = document.createElement('div'); row.className = 'skill-row';
+    const nome = document.createElement('div'); nome.className = 'skill-name';
+    const simbolo = document.createElement('span'); simbolo.className = 'skill-symbol'; simbolo.textContent = '✦';
+    const label = document.createElement('label'); label.textContent = p.pericia || p.nome || `Perícia ${id}`;
+    nome.append(simbolo,label);
+    const input = document.createElement('input'); input.type='number'; input.min='0'; input.value=escolhidas.get(id) ?? 0; input.dataset.periciaId=id; input.setAttribute('aria-label',`Valor de ${label.textContent}`);
+    input.addEventListener('input', () => {
+      const existente = periciasFicha.find(x => Number(x.periciaId) === id);
+      if (existente) existente.valorPericia = Number(input.value || 0);
+      else periciasFicha.push({periciaId:id, nome:label.textContent, valorPericia:Number(input.value || 0)});
+      $('status-ficha').textContent = 'Alterações ainda não salvas';
+    });
+
+    row.append(nome, input);
+    box.appendChild(row);
+
+  });
+}
+function adicionarPericiaManual() {
+  document.querySelector('.tabs .tab[data-tab="pericias"]').click();
+  $('campos-pericias').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function atualizarResumo() {
+  $('resumo-nome').textContent = valor('nome-personagem') || '—';
+  $('resumo-jogador').textContent = valor('jogador-personagem') || '—';
+  $('resumo-nivel').textContent = valor('nivel-personagem') || '1';
+  ['forca','destreza','inteligencia','vontade','fortitude'].forEach(k => $(`resumo-${k}`).textContent = valor(`${k}-personagem`) || '0');
+}
+async function salvarPersonagem() {
+  const nome = valor('nome-personagem').trim();
+  if (!nome) { alert('Informe o nome do personagem.'); $('nome-personagem').focus(); return; }
+  const dados = {
+    nome, nomeJogador: valor('jogador-personagem').trim(), nivel: Number(valor('nivel-personagem') || 1),
+    forca: Number(valor('forca-personagem') || 0), destreza: Number(valor('destreza-personagem') || 0),
+    inteligencia: Number(valor('inteligencia-personagem') || 0), vontade: Number(valor('vontade-personagem') || 0),
+    fortitude: Number(valor('fortitude-personagem') || 0),
+    pericias: periciasDisponiveis.map(p => {
+      const input = document.querySelector(`.skill-row input[data-pericia-id="${p.id}"]`);
+      return {periciaId:Number(p.id), valorPericia:Number(input?.value || 0)};
+    })
+  };
+  const url = personagemAtualId == null ? '/api/personagem' : `/api/personagem/personagens/${personagemAtualId}`;
+  const method = personagemAtualId == null ? 'POST' : 'PUT';
+  try {
+    const r = await fetch(url,{method,headers:{'Content-Type':'application/json'},body:JSON.stringify(dados)});
+    if (!r.ok) {
+      const detalhe = await r.text();
+      throw new Error(`HTTP ${r.status}: ${detalhe}`);
+    }
+    const salvo = await r.json().catch(() => null);
+    await carregarPersonagens();
+    if (salvo?.id != null) selecionarPersonagem(salvo.id);
+    else if (personagemAtualId != null) selecionarPersonagem(personagemAtualId);
+    else {
+      const encontrado = personagens.find(p => p.nome === nome);
+      if (encontrado) selecionarPersonagem(encontrado.id);
+    }
+    $('status-ficha').textContent = 'Ficha salva com sucesso.';
+  } catch(e) {
+    console.error(e);
+    alert('Não foi possível salvar. Confira se as rotas POST /api/personagem e PUT /api/personagem/personagens/{id} existem e veja o console.');
+  }
+}
+async function excluirPersonagemAtual() {
+  if (personagemAtualId == null) return;
+  if (!confirm('Deseja realmente excluir este personagem?')) return;
+  try {
+    const r = await fetch(`/api/personagem/personagens/${personagemAtualId}`,{method:'DELETE'});
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    await carregarPersonagens(); novoPersonagem();
+    $('status-ficha').textContent = 'Personagem excluído.';
+  } catch(e) {
+    console.error(e);
+    alert('Não foi possível excluir. Confira a rota DELETE /api/personagem/personagens/{id}.');
+  }
+}
+function cancelarEdicao() {
+  if (personagemAtualId != null) selecionarPersonagem(personagemAtualId);
+  else novoPersonagem();
+}
+
+const configuracaoCatalogos = {
+
+		pericias: {
+		    url: '/api/personagem/pericias',
+		    lista: 'lista-catalogo-pericias',
+		    total: 'total-pericias',
+		    nome: p => p.pericia || 'Perícia sem nome',
+		    detalhes: p => p.desPericia || 'Sem descrição cadastrada.'
+		},
+
+    rituais: {
+        url: '/api/personagem/ritual',
+        lista: 'lista-catalogo-rituais',
+        total: 'total-rituais',
+        nome: p => p.nomeRitual || 'Ritual sem nome',
+        detalhes: p => [
+            p.execucaoRitual && `Execução: ${p.execucaoRitual}`,
+            p.alvoRitual && `Alvo: ${p.alvoRitual}`,
+            p.duracaoRitual && `Duração: ${p.duracaoRitual}`,
+            p.resistenciaRitual && `Resistência: ${p.resistenciaRitual}`,
+            p.descRitual
+        ].filter(Boolean).join('\n')
+    },
+    'poderes-classe': {
+        url: '/api/personagem/poder',
+        lista: 'lista-catalogo-poderes-classe',
+        total: 'total-poderes-classe',
+        nome: p => p.nomePoderPersonagem || 'Poder sem nome',
+        detalhes: p => p.poderPersonagem || ''
+    },
+    'poderes-paranormais': {
+        url: '/api/personagem/poderParanormal',
+        lista: 'lista-catalogo-poderes-paranormais',
+        total: 'total-poderes-paranormais',
+        nome: p => p.nomePoderParanormal || 'Poder sem nome',
+        detalhes: p => [
+            p.elementoPoder && `Elemento: ${p.elementoPoder}`,
+            p.descPoderParanormal
+        ].filter(Boolean).join('\n')
+    },
+    condicoes: {
+        url: '/api/personagem/condicao',
+        lista: 'lista-catalogo-condicoes',
+        total: 'total-condicoes',
+        nome: p => p.nomeCondicao || 'Condição sem nome',
+        detalhes: p => p.descCondicao || ''
+    },
+    
+
+
+    origens: {
+        url: '/api/personagem/origem',
+        lista: 'lista-catalogo-origens',
+        total: 'total-origens',
+
+        nome: p => p.origem || 'Origem sem nome',
+
+        detalhes: p => [
+            p.periciaOrigem
+                ? `Perícia concedida: ${p.periciaOrigem}`
+                : null,
+
+            p.nomePoderOrigem
+                ? `Nome do poder: ${p.nomePoderOrigem}`
+                : null,
+
+            p.poderOrigem
+                ? `Descrição do poder: ${p.poderOrigem}`
+                : null
+        ].filter(Boolean).join('\n')
+    },
+
+
+    trilhas: {
+        url: '/api/personagem/trilha',
+        lista: 'lista-catalogo-trilhas',
+        total: 'total-trilhas',
+        nome: p => p.trilhaPersonagem || p.nomeTrilha || 'Trilha sem nome',
+        detalhes: p => [
+            p.classePersonagem && `Classe: ${p.classePersonagem}`,
+            p.nomeHabilidadeTrilhaPersonagem &&
+                `Habilidade: ${p.nomeHabilidadeTrilhaPersonagem}`,
+            p.descTrilhaPersonagem
+        ].filter(Boolean).join('\n')
+    }
+
+
+};
+
+const catalogosCarregados = new Set();
+
+function trocarAbaPrincipal(aba) {
+    document.querySelectorAll('[data-view-content]').forEach(secao => {
+        secao.hidden = secao.dataset.viewContent !== aba;
+    });
+
+    document.querySelectorAll('.nav-tab').forEach(botao => {
+        const selecionado = botao.dataset.view === aba;
+        botao.classList.toggle('selected', selecionado);
+        botao.setAttribute('aria-current', selecionado ? 'page' : 'false');
+    });
+
+    if (aba !== 'personagens') {
+        carregarCatalogo(aba);
+    }
+}
+
+document.querySelectorAll('.nav-tab').forEach(botao => {
+    botao.addEventListener('click', () => {
+        trocarAbaPrincipal(botao.dataset.view);
+    });
+});
+
+async function carregarCatalogo(tipo) {
+    const config = configuracaoCatalogos[tipo];
+    if (!config) return;
+
+    const container = $(config.lista);
+
+    try {
+        container.innerHTML = '<p class="muted">Carregando registros...</p>';
+
+        const resposta = await fetch(config.url);
+        if (!resposta.ok) {
+            throw new Error(`HTTP ${resposta.status}`);
+        }
+
+        const registros = await resposta.json();
+
+        $(config.total).textContent =
+            `${registros.length} registro(s)`;
+
+        container.innerHTML = '';
+
+        if (!registros.length) {
+            container.innerHTML =
+                '<p class="muted">Nenhum registro cadastrado.</p>';
+            catalogosCarregados.add(tipo);
+            return;
+        }
+
+        registros.forEach(registro => {
+            const card = document.createElement('article');
+            card.className = 'catalog-item';
+
+            const titulo = document.createElement('h3');
+            titulo.textContent = config.nome(registro);
+
+            const descricao = document.createElement('p');
+            descricao.className = 'muted';
+            descricao.textContent =
+                config.detalhes(registro) || 'Sem descrição cadastrada.';
+
+            card.append(titulo, descricao);
+            container.appendChild(card);
+        });
+
+        catalogosCarregados.add(tipo);
+    } catch (erro) {
+        console.error(`Erro ao carregar ${tipo}:`, erro);
+
+        container.innerHTML =
+            '<p class="muted">Não foi possível carregar os registros. Verifique a API e o console do navegador.</p>';
+
+        $(config.total).textContent = 'Indisponível';
+    }
+}
+
+
+iniciar();
+trocarAbaPrincipal('personagens');
+
+
+</script>
+</body>
+</html>

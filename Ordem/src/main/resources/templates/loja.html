@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gerador de Loja</title>
+
+    <link rel="stylesheet" href="/css/loja.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header class="cabecalho">
+            <h1>Gerador de Loja</h1>
+            <p>Gere uma loja aleatória utilizando os itens cadastrados.</p>
+        </header>
+
+        <section class="painel">
+
+            <div class="campo">
+                <label for="tamanho-loja">Tamanho da loja</label>
+
+                <select id="tamanho-loja">
+                    <option value="pequena">Pequena</option>
+                    <option value="media">Média</option>
+                    <option value="grande">Grande</option>
+                </select>
+            </div>
+
+            <button id="btn-gerar">
+                Gerar Loja
+            </button>
+
+        </section>
+
+        <section class="resultado">
+
+            <div class="resultado-cabecalho">
+                <h2 id="titulo-loja">Sua loja</h2>
+                <span id="quantidade-itens"></span>
+            </div>
+
+            <div id="lista-itens" class="lista-itens">
+                <p class="mensagem">
+                    Escolha o tamanho da loja e clique em "Gerar Loja".
+                </p>
+            </div>
+
+        </section>
+
+    </div>
+
+<script>
+
+const btnGerar = document.querySelector('#btn-gerar');
+const tamanhoLoja = document.querySelector('#tamanho-loja');
+const listaItens = document.querySelector('#lista-itens');
+const tituloLoja = document.querySelector('#titulo-loja');
+const quantidadeItens = document.querySelector('#quantidade-itens');
+
+
+btnGerar.addEventListener('click', gerarLoja);
+
+
+async function gerarLoja() {
+
+    const tamanho = tamanhoLoja.value;
+
+    btnGerar.disabled = true;
+    btnGerar.textContent = 'Gerando...';
+
+    try {
+
+        const resposta = await fetch(`/api/loja/${tamanho}`);
+
+        if (!resposta.ok) {
+            throw new Error('Erro ao gerar loja.');
+        }
+
+        const itens = await resposta.json();
+        
+        console.log(itens);
+
+        mostrarItens(itens);
+
+        atualizarTitulo(tamanho, itens.length);
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        listaItens.innerHTML = `
+            <p class="mensagem">
+                Não foi possível gerar a loja.
+            </p>
+        `;
+
+        quantidadeItens.textContent = '';
+
+    } finally {
+
+        btnGerar.disabled = false;
+        btnGerar.textContent = 'Gerar Loja';
+    }
+}
+
+
+function mostrarItens(itens) {
+
+    listaItens.innerHTML = '';
+
+    itens.forEach(item => {
+
+        const card = document.createElement('div');
+
+        card.classList.add('item');
+
+        card.innerHTML = `
+            <h3>${item.nome}</h3>
+
+            <div class="item-info">
+
+                <div>
+                    Categoria:
+                    <strong>${item.categoria}</strong>
+                </div>
+
+                <div>
+                    Classificação:
+                    <strong>${item.classificacao}</strong>
+                </div>
+
+                <div>
+                    Dano:
+                    <strong>${item.dano}</strong>
+                </div>
+
+                <div>
+                    Crítico:
+                    <strong>${item.critico}</strong>
+                </div>
+
+                <div>
+                    Alcance:
+                    <strong>${item.alcance}</strong>
+                </div>
+
+                <div>
+                    Espaço:
+                    <strong>${item.espaco}</strong>
+                </div>
+
+            </div>
+
+            <div class="item-descricao">
+                ${item.descricao || 'Sem descrição.'}
+            </div>
+        `;
+
+        listaItens.appendChild(card);
+    });
+}
+
+
+function atualizarTitulo(tamanho, quantidade) {
+
+    let nomeLoja;
+
+    if (tamanho === 'pequena') {
+        nomeLoja = 'Loja Pequena';
+    }
+
+    if (tamanho === 'media') {
+        nomeLoja = 'Loja Média';
+    }
+
+    if (tamanho === 'grande') {
+        nomeLoja = 'Loja Grande';
+    }
+
+    tituloLoja.textContent = nomeLoja;
+
+    quantidadeItens.textContent =
+        `${quantidade} ${quantidade === 1 ? 'item' : 'itens'}`;
+}
+
+</script>
+
+</body>
+</html>
