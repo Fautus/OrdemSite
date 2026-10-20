@@ -817,4 +817,326 @@ button:disabled {
 }
 
 
+.item-adicionar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 110px auto;
+    gap: 10px;
+    align-items: end;
+    margin-bottom: 24px;
+}
+
+.item-adicionar .field-label:first-child {
+    grid-column: 1;
+}
+
+.item-adicionar #seletor-item {
+    grid-column: 1;
+}
+
+.item-adicionar .field-label[for="quantidade-item"] {
+    grid-column: 2;
+}
+
+.item-adicionar #quantidade-item {
+    grid-column: 2;
+}
+
+.item-adicionar button {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+@media (max-width: 600px) {
+    .item-adicionar {
+        grid-template-columns: minmax(0, 1fr) 90px;
+    }
+
+    .item-adicionar button {
+        grid-column: 1 / -1;
+        grid-row: auto;
+    }
+}
+
+
+/* Respeitar o atributo hidden em todas as abas */
+[hidden] {
+    display: none !important;
+}
+
+/* Estilo dos botões de navegação */
+.main-nav .nav-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #d7d9df;
+    padding: 12px 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transform: skew(-8deg);
+    transition: 0.2s;
+}
+
+.main-nav .nav-tab:hover,
+.main-nav .nav-tab.selected {
+    background: #f21b2d;
+    color: white;
+    border-bottom-color: white;
+}
+
+/* ===== TOPO / NAVEGAÇÃO PRINCIPAL ===== */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 14px 22px;
+    border-bottom: 1px solid #ff1f3d;
+    background: rgba(8, 10, 18, 0.96);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.main-nav a,
+.nav-tab {
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: linear-gradient(180deg, #161922 0%, #0d1018 100%);
+    color: #f2f2f2;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+.main-nav a:hover,
+.nav-tab:hover {
+    border-color: #ff2b45;
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 0 0 1px rgba(255, 43, 69, 0.25),
+                0 10px 25px rgba(0,0,0,0.25);
+}
+
+.nav-tab.selected {
+    background: linear-gradient(180deg, #ff2b45 0%, #b90f26 100%);
+    border-color: #ff4158;
+    color: #ffffff;
+    box-shadow: 0 0 0 1px rgba(255, 65, 88, 0.25),
+                0 12px 25px rgba(185, 15, 38, 0.25);
+}
+
+/* ===== ESPAÇAMENTO GERAL ===== */
+.app-shell {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 80px);
+}
+
+.roster {
+    padding: 26px 18px;
+    border-right: 1px solid rgba(255, 43, 69, 0.35);
+}
+
+.workspace,
+.catalog-view {
+    padding: 26px 30px 40px;
+}
+
+.page-heading {
+    margin-bottom: 26px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.page-heading h1 {
+    margin: 6px 0 10px;
+    font-size: 3rem;
+    line-height: 1;
+}
+
+.page-heading .muted {
+    max-width: 800px;
+    line-height: 1.6;
+}
+
+/* ===== ABAS INTERNAS ===== */
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.03);
+    color: #d8d8d8;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab:hover {
+    border-color: #ff2b45;
+    color: #fff;
+}
+
+.tab.active {
+    background: rgba(255, 43, 69, 0.14);
+    border-color: #ff2b45;
+    color: #fff;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+/* ===== PAINÉIS / CATÁLOGOS ===== */
+.panel,
+.catalog-panel {
+    background: linear-gradient(180deg, rgba(14,18,28,0.96) 0%, rgba(8,11,18,0.98) 100%);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.20);
+}
+
+.panel-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.panel-heading h2 {
+    margin: 6px 0 6px;
+    font-size: 1.8rem;
+}
+
+.catalog-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px;
+}
+
+/* ===== CADA REGISTRO ===== */
+.catalog-item {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-left: 4px solid #ff2b45;
+    border-radius: 12px;
+    padding: 18px 20px;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.catalog-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+}
+
+.catalog-item h3,
+.catalog-item h4 {
+    margin: 0 0 12px;
+    font-size: 1.8rem;
+    color: #ffffff;
+}
+
+.catalog-item p {
+    margin: 0 0 10px;
+    line-height: 1.6;
+}
+
+.catalog-item .muted {
+    color: #b7bfd3;
+}
+
+/* Faz o \n virar quebra visual */
+.catalog-details,
+.catalog-item .muted {
+    white-space: pre-line;
+}
+
+/* Linha separando ações */
+.catalog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* ===== BOTÕES ===== */
+.btn {
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-red {
+    background: linear-gradient(180deg, #ff2b45 0%, #c4122b 100%);
+    color: #fff;
+    border-color: #ff4158;
+}
+
+.btn-red:hover {
+    box-shadow: 0 10px 18px rgba(255, 43, 69, 0.25);
+}
+
+.btn-outline {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255,255,255,0.20);
+}
+
+.btn-outline:hover {
+    border-color: #ff2b45;
+    color: #fff;
+}
+
+.btn-danger-outline {
+    background: transparent;
+    color: #ff5a6b;
+    border-color: rgba(255, 90, 107, 0.45);
+}
+
+.btn-danger-outline:hover {
+    background: rgba(255, 43, 69, 0.08);
+    border-color: #ff5a6b;
+}
+
+.btn-full {
+    width: 100%;
+}
+
 }

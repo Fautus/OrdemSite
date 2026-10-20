@@ -6,9 +6,14 @@ import java.util.List;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -53,6 +58,32 @@ public class Personagem {
         pericias.add(pericia);
         pericia.setPersonagem(this);
     }
+    
+    @ManyToMany
+    @JoinTable(
+        name = "personagem_trilha",
+        joinColumns = @JoinColumn(name = "personagem_id"),
+        inverseJoinColumns = @JoinColumn(name = "trilha_id")
+    )
+    private List<Trilha> trilhas = new ArrayList<>();
+
+    // Poderes de classe do personagem
+    @ManyToMany
+    @JoinTable(
+        name = "personagem_poder",
+        joinColumns = @JoinColumn(name = "personagem_id"),
+        inverseJoinColumns = @JoinColumn(name = "poder_id")
+    )
+    private List<Poder> poderesClasse = new ArrayList<>();
+
+    // Poderes paranormais do personagem
+    @ManyToMany
+    @JoinTable(
+        name = "personagem_poder_paranormal",
+        joinColumns = @JoinColumn(name = "personagem_id"),
+        inverseJoinColumns = @JoinColumn(name = "poder_paranormal_id")
+    )
+    private List<PoderParanormal> poderesParanormais = new ArrayList<>();
     
     
 
@@ -161,9 +192,30 @@ public class Personagem {
 		this.pericias = pericias;
 	}
 
+	public List<Poder> getPoderesClasse() {
+	    return poderesClasse;
+	}
+
+	public void setPoderesClasse(List<Poder> poderesClasse) {
+	    this.poderesClasse = poderesClasse;
+	}
+
+	public List<PoderParanormal> getPoderesParanormais() {
+	    return poderesParanormais;
+	}
+
+	public void setPoderesParanormais(
+	        List<PoderParanormal> poderesParanormais) {
+	    this.poderesParanormais = poderesParanormais;
+	}
 	
-	
-    
+	public List<Trilha> getTrilhas() {
+	    return trilhas;
+	}
+
+	public void setTrilhas(List<Trilha> trilhas) {
+	    this.trilhas = trilhas;
+	}
 	
     
 }

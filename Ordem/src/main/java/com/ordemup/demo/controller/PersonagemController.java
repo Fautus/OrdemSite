@@ -1,5 +1,7 @@
 package com.ordemup.demo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,19 +16,24 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ordemup.demo.respositories.CondicaoRepository;
+import com.ordemup.demo.respositories.ItemRepository;
 import com.ordemup.demo.respositories.OrigemRepository;
 import com.ordemup.demo.respositories.PericiasRepository;
+import com.ordemup.demo.respositories.PersonagemItemRepository;
 import com.ordemup.demo.respositories.PersonagemRepository;
 import com.ordemup.demo.respositories.PoderParanormalRepositoty;
 import com.ordemup.demo.respositories.PoderRepository;
 import com.ordemup.demo.respositories.RitualRepository;
 import com.ordemup.demo.respositories.TrilhaRepository;
 import com.ordemup.demo.tela.Condicao;
+import com.ordemup.demo.tela.Item;
 import com.ordemup.demo.tela.Origem;
 import com.ordemup.demo.tela.Pericia;
 import com.ordemup.demo.tela.PericiaPersonagemDTO;
 import com.ordemup.demo.tela.Personagem;
 import com.ordemup.demo.tela.PersonagemCadastroDTO;
+import com.ordemup.demo.tela.PersonagemItem;
+import com.ordemup.demo.tela.PersonagemItemDTO;
 import com.ordemup.demo.tela.PersonagemPericia;
 import com.ordemup.demo.tela.Poder;
 import com.ordemup.demo.tela.PoderParanormal;
@@ -452,6 +459,262 @@ public class PersonagemController {
         return periciaRepository.findAll();
     }   
     
+    //Implementação dos itens no personagem
     
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @Autowired
+    private PersonagemItemRepository personagemItemRepository;
+    
+
+@GetMapping("/personagens/{personagemId}/itens")
+public List<PersonagemItemDTO> obterItensDoPersonagem(
+        @PathVariable Long personagemId) {
+
+    if (!personagemRepository.existsById(personagemId)) {
+        throw new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "Personagem não encontrado"
+        );
+    }
+
+    return personagemItemRepository
+        .findByPersonagem_Id(personagemId)
+        .stream()
+        .map(relacao -> {
+            Item item = relacao.getItem();
+
+            PersonagemItemDTO dto = new PersonagemItemDTO();
+            dto.setItemId(item.getId());
+            dto.setNome(item.getNome());
+            dto.setCategoria(item.getCategoria());
+            dto.setClassificacao(item.getClassificacao());
+            dto.setQuantidade(relacao.getQuantidade());
+            dto.setDano(item.getDano());
+            dto.setCritico(item.getCritico());
+            
+
+            return dto;
+        })
+        .toList();
+}
+
+@PostMapping("/personagens/{personagemId}/itens")
+@Transactional
+public PersonagemItemDTO adicionarItemAoPersonagem(
+        @PathVariable Long personagemId,
+        @RequestBody PersonagemItemDTO dados) {
+
+    if (dados.getItemId() == null) {
+        throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST, "Informe o ID do item"
+        );
+    }
+
+    if (dados.getQuantidade() < 1) {
+        throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST, "A quantidade deve ser pelo menos 1"
+        );
+    }
+
+    Personagem personagem = personagemRepository.findById(personagemId)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "Personagem não encontrado"
+        ));
+
+    Item item = itemRepository.findById(dados.getItemId())
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "Item não encontrado"
+        ));
+
+    PersonagemItem relacao = new PersonagemItem(
+        personagem, item, dados.getQuantidade()
+    );
+
+    personagemItemRepository.save(relacao);
+
+    PersonagemItemDTO resposta = new PersonagemItemDTO();
+    resposta.setItemId(item.getId());
+    resposta.setNome(item.getNome());
+    resposta.setCategoria(item.getCategoria());
+    resposta.setClassificacao(item.getClassificacao());
+    resposta.setQuantidade(relacao.getQuantidade());
+    resposta.setDano(item.getDano());
+    resposta.setCritico(item.getCritico());
+
+    return resposta;
+}
+
+@DeleteMapping("/personagens/{personagemId}/itens/{itemId}")
+@Transactional
+public void removerItemDoPersonagem(
+        @PathVariable Long personagemId,
+        @PathVariable Long itemId) {
+
+    PersonagemItem relacao = personagemItemRepository
+        .findByPersonagem_Id(personagemId)
+        .stream()
+        .filter(r -> r.getItem().getId() == itemId)
+        .findFirst()
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND,
+            "Esse item não está associado ao personagem"
+        ));
+
+    personagemItemRepository.delete(relacao);
+}
+
+//========================================
+//TRILHA DO PERSONAGEM
+//========================================
+
+@PutMapping("/personagens/{personagemId}/trilha/{trilhaId}")
+@Transactional
+public Personagem vincularTrilha(
+        @PathVariable Long personagemId,
+        @PathVariable Long trilhaId) {
+
+    Personagem personagem = personagemRepository.findById(personagemId)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "Personagem não encontrado"));
+
+    Trilha trilha = trilhaRepository.findById(trilhaId)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "Trilha não encontrada"));
+
+    boolean jaVinculada = personagem.getTrilhas().stream()
+        .anyMatch(t -> t.getId() == trilhaId);
+
+    if (!jaVinculada) {
+        personagem.getTrilhas().add(trilha);
+    }
+
+    return personagemRepository.save(personagem);
+}
+
+
+@DeleteMapping("/personagens/{personagemId}/trilha/{trilhaId}")
+@Transactional
+public Personagem removerTrilha(
+        @PathVariable Long personagemId,
+        @PathVariable Long trilhaId) {
+
+    Personagem personagem = personagemRepository.findById(personagemId)
+        .orElseThrow(() -> new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "Personagem não encontrado"));
+
+    personagem.getTrilhas().removeIf(t -> t.getId() == trilhaId);
+
+    return personagemRepository.save(personagem);
+}
+
+
+//========================================
+//PODERES DE CLASSE
+//========================================
+
+@PutMapping("/personagens/{personagemId}/poderes/{poderId}")
+@Transactional
+public Personagem adicionarPoderClasse(
+     @PathVariable Long personagemId,
+     @PathVariable Long poderId) {
+
+ Personagem personagem = personagemRepository.findById(personagemId)
+     .orElseThrow(() -> new ResponseStatusException(
+         HttpStatus.NOT_FOUND, "Personagem não encontrado"));
+
+ Poder poder = poderRepository.findById(poderId)
+     .orElseThrow(() -> new ResponseStatusException(
+         HttpStatus.NOT_FOUND, "Poder não encontrado"));
+
+ if (!personagem.getPoderesClasse().stream()
+         .anyMatch(p -> p.getId() == poderId)) {
+     personagem.getPoderesClasse().add(poder);
+ }
+
+ return personagemRepository.save(personagem);
+}
+
+
+@DeleteMapping("/personagens/{personagemId}/poderes/{poderId}")
+@Transactional
+public void removerPoderClasse(
+     @PathVariable Long personagemId,
+     @PathVariable Long poderId) {
+
+ Personagem personagem = personagemRepository.findById(personagemId)
+     .orElseThrow(() -> new ResponseStatusException(
+         HttpStatus.NOT_FOUND, "Personagem não encontrado"));
+
+ personagem.getPoderesClasse()
+     .removeIf(p -> p.getId() == poderId);
+
+ personagemRepository.save(personagem);
+}
+
+
+//========================================
+//PODERES PARANORMAIS
+//========================================
+
+@PutMapping("/personagens/{personagemId}/poderes-paranormais/{poderId}")
+@Transactional
+public Personagem adicionarPoderParanormal(
+     @PathVariable Long personagemId,
+     @PathVariable Long poderId) {
+
+ Personagem personagem = personagemRepository.findById(personagemId)
+     .orElseThrow(() -> new ResponseStatusException(
+         HttpStatus.NOT_FOUND, "Personagem não encontrado"));
+
+ PoderParanormal poder = poderParanormalRepositoty.findById(poderId)
+     .orElseThrow(() -> new ResponseStatusException(
+         HttpStatus.NOT_FOUND, "Poder paranormal não encontrado"));
+
+ if (!personagem.getPoderesParanormais().stream()
+         .anyMatch(p -> p.getId() == poderId)) {
+     personagem.getPoderesParanormais().add(poder);
+ }
+
+ return personagemRepository.save(personagem);
+}
+
+
+@DeleteMapping("/personagens/{personagemId}/poderes-paranormais/{poderId}")
+@Transactional
+public void removerPoderParanormal(
+     @PathVariable Long personagemId,
+     @PathVariable Long poderId) {
+
+ Personagem personagem = personagemRepository.findById(personagemId)
+     .orElseThrow(() -> new ResponseStatusException(
+         HttpStatus.NOT_FOUND, "Personagem não encontrado"));
+
+ personagem.getPoderesParanormais()
+     .removeIf(p -> p.getId() == poderId);
+
+ personagemRepository.save(personagem);
+}
+
+//========================================
+//CONSULTAR HABILIDADES DO PERSONAGEM
+//========================================
+
+@GetMapping("/personagens/{personagemId}/habilidades")
+public java.util.Map<String, Object> obterHabilidades(
+     @PathVariable Long personagemId) {
+
+ Personagem personagem = personagemRepository.findById(personagemId)
+     .orElseThrow(() -> new ResponseStatusException(
+         HttpStatus.NOT_FOUND, "Personagem não encontrado"));
+
+ java.util.Map<String, Object> resposta = new java.util.HashMap<>();
+
+ resposta.put("trilhas", personagem.getTrilhas());
+ resposta.put("poderesClasse", personagem.getPoderesClasse());
+ resposta.put("poderesParanormais", personagem.getPoderesParanormais());
+
+ return resposta;
+}
     
 }

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ordem Up — Personagens</title>
-<link rel="stylesheet" href="/css/personagem.css">
+<link rel="stylesheet" href="/css/personagem-v2.css?v=2">
 </head>
 <body>
 	<header class="topbar">
@@ -159,23 +159,42 @@
 					
 					
 <!-- ABA: ITENS DO PERSONAGEM -->
+
 <section class="panel tab-panel" id="tab-itens">
     <div class="panel-heading">
         <div>
             <p class="eyebrow">EQUIPAMENTO DO AGENTE</p>
             <h2>Itens do personagem</h2>
-            <p class="muted">
-                Consulte os itens carregados por este personagem.
-            </p>
+            <p class="muted">Adicione itens do catálogo à ficha.</p>
         </div>
     </div>
 
+    <div class="item-adicionar">
+        <label class="field-label" for="seletor-item">
+            ITEM DO CATÁLOGO
+        </label>
+        <select id="seletor-item" class="field">
+            <option value="">Carregando itens...</option>
+        </select>
+
+        <label class="field-label" for="quantidade-item">
+            QUANTIDADE
+        </label>
+        <input id="quantidade-item" class="field short-field"
+               type="number" min="1" value="1">
+
+        <button type="button" class="btn btn-red"
+                onclick="adicionarItemAoPersonagem()">
+            ＋ ADICIONAR ITEM
+        </button>
+    </div>
+
     <div id="lista-itens-personagem" class="catalog-list">
-        <p class="muted">
-            Os itens do personagem serão exibidos aqui.
-        </p>
+        <p class="muted">Selecione um personagem para ver os itens.</p>
     </div>
 </section>
+
+
 
 <!-- ABA: HABILIDADES DO PERSONAGEM -->
 <section class="panel tab-panel" id="tab-habilidades">
@@ -184,35 +203,74 @@
             <p class="eyebrow">CAPACIDADES DO AGENTE</p>
             <h2>Habilidades</h2>
             <p class="muted">
-                Trilha, poderes de classe e poderes paranormais.
+                Gerencie a trilha e os poderes deste personagem.
             </p>
         </div>
     </div>
 
+    <!-- TRILHA -->
     <div class="habilidade-grupo">
         <h3>Trilha</h3>
+
+        <label class="field-label" for="seletor-trilha">
+            SELECIONAR TRILHA
+        </label>
+
+        <select id="seletor-trilha" class="field">
+            <option value="">Carregando trilhas...</option>
+        </select>
+
+        <button type="button" class="btn btn-red"
+                onclick="vincularTrilhaSelecionada()">
+            VINCULAR TRILHA
+        </button>
+
         <div id="trilha-personagem">
-            <p class="muted">
-                Nenhuma trilha vinculada.
-            </p>
+            <p class="muted">Nenhuma trilha vinculada.</p>
         </div>
     </div>
 
+    <!-- PODERES DE CLASSE -->
     <div class="habilidade-grupo">
         <h3>Poderes de classe</h3>
+
+        <label class="field-label" for="seletor-poder-classe">
+            SELECIONAR PODER
+        </label>
+
+        <select id="seletor-poder-classe" class="field">
+            <option value="">Carregando poderes...</option>
+        </select>
+
+        <button type="button" class="btn btn-red"
+                onclick="adicionarPoderClasseSelecionado()">
+            ADICIONAR PODER
+        </button>
+
         <div id="poderes-classe-personagem">
-            <p class="muted">
-                Nenhum poder de classe vinculado.
-            </p>
+            <p class="muted">Nenhum poder de classe vinculado.</p>
         </div>
     </div>
 
+    <!-- PODERES PARANORMAIS -->
     <div class="habilidade-grupo">
         <h3>Poderes paranormais</h3>
+
+        <label class="field-label" for="seletor-poder-paranormal">
+            SELECIONAR PODER PARANORMAL
+        </label>
+
+        <select id="seletor-poder-paranormal" class="field">
+            <option value="">Carregando poderes...</option>
+        </select>
+
+        <button type="button" class="btn btn-red"
+                onclick="adicionarPoderParanormalSelecionado()">
+            ADICIONAR PODER
+        </button>
+
         <div id="poderes-paranormais-personagem">
-            <p class="muted">
-                Nenhum poder paranormal vinculado.
-            </p>
+            <p class="muted">Nenhum poder paranormal vinculado.</p>
         </div>
     </div>
 </section>
@@ -330,15 +388,78 @@
                 </div>
             </div>
 
-            <div class="panel catalog-panel">
-                <div class="panel-heading">
-                    <h2>Catálogo de rituais</h2>
-                    <span id="total-rituais">00 registros</span>
-                </div>
-                <div id="lista-catalogo-rituais" class="catalog-list">
-                    <p class="muted">Carregando rituais...</p>
-                </div>
-            </div>
+            
+<div class="panel catalog-panel">
+    <div class="panel-heading">
+        <h2>Catálogo de rituais</h2>
+
+        <div class="heading-actions">
+            <span id="total-rituais">00 registros</span>
+
+            <button type="button" class="btn btn-red"
+                    onclick="novoRitual()">
+                + NOVO RITUAL
+            </button>
+        </div>
+    </div>
+
+    <!-- Formulário de cadastro e edição -->
+    <form id="form-ritual" class="panel" hidden>
+        <h3 id="titulo-form-ritual">Cadastrar ritual</h3>
+
+        <label class="field-label" for="nome-ritual">
+            NOME DO RITUAL
+        </label>
+        <input id="nome-ritual" class="field"
+               type="text" required>
+
+        <label class="field-label" for="execucao-ritual">
+            EXECUÇÃO
+        </label>
+        <input id="execucao-ritual" class="field"
+               type="text" required>
+
+        <label class="field-label" for="alvo-ritual">
+            ALVO
+        </label>
+        <input id="alvo-ritual" class="field"
+               type="text" required>
+
+        <label class="field-label" for="duracao-ritual">
+            DURAÇÃO
+        </label>
+        <input id="duracao-ritual" class="field"
+               type="text" required>
+
+        <label class="field-label" for="resistencia-ritual">
+            RESISTÊNCIA
+        </label>
+        <input id="resistencia-ritual" class="field"
+               type="text">
+
+        <label class="field-label" for="desc-ritual">
+            DESCRIÇÃO
+        </label>
+        <textarea id="desc-ritual" class="field text-area"
+                  rows="5" required></textarea>
+
+        <div class="heading-actions">
+            <button type="submit" class="btn btn-red">
+                SALVAR RITUAL
+            </button>
+
+            <button type="button" class="btn btn-outline"
+                    onclick="cancelarFormularioRitual()">
+                CANCELAR
+            </button>
+        </div>
+    </form>
+
+    <div id="lista-catalogo-rituais" class="catalog-list">
+        <p class="muted">Carregando rituais...</p>
+    </div>
+</div>
+
         </section>
 
         <!-- ABA: PODERES DE CLASSE -->
@@ -352,15 +473,67 @@
                 </div>
             </div>
 
-            <div class="panel catalog-panel">
-                <div class="panel-heading">
-                    <h2>Catálogo de poderes de classe</h2>
-                    <span id="total-poderes-classe">00 registros</span>
-                </div>
-                <div id="lista-catalogo-poderes-classe" class="catalog-list">
-                    <p class="muted">Carregando poderes...</p>
-                </div>
-            </div>
+            
+<div class="panel catalog-panel">
+    <div class="panel-heading">
+        <h2>Catálogo de poderes de classe</h2>
+
+        <div class="heading-actions">
+            <span id="total-poderes-classe">00 registros</span>
+
+            <button
+                type="button"
+                class="btn btn-red"
+                onclick="novoPoderClasse()">
+                + NOVO PODER
+            </button>
+        </div>
+    </div>
+
+    <form id="form-poder-classe" class="panel" hidden>
+        <h3 id="titulo-form-poder-classe">
+            Cadastrar poder de classe
+        </h3>
+
+        <label class="field-label" for="nome-poder-classe">
+            NOME DO PODER
+        </label>
+        <input
+            id="nome-poder-classe"
+            class="field"
+            type="text"
+            required>
+
+        <label class="field-label" for="descricao-poder-classe">
+            DESCRIÇÃO DO PODER
+        </label>
+        <textarea
+            id="descricao-poder-classe"
+            class="field text-area"
+            rows="5"
+            required></textarea>
+
+        <div class="heading-actions">
+            <button type="submit" class="btn btn-red">
+                SALVAR PODER
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                onclick="cancelarFormularioPoderClasse()">
+                CANCELAR
+            </button>
+        </div>
+    </form>
+
+    <div
+        id="lista-catalogo-poderes-classe"
+        class="catalog-list">
+        <p class="muted">Carregando poderes...</p>
+    </div>
+</div>
+
         </section>
 
         <!-- ABA: PODERES PARANORMAIS -->
@@ -374,16 +547,82 @@
                 </div>
             </div>
 
-            <div class="panel catalog-panel">
-                <div class="panel-heading">
-                    <h2>Catálogo de poderes paranormais</h2>
-                    <span id="total-poderes-paranormais">00 registros</span>
-                </div>
-                <div id="lista-catalogo-poderes-paranormais" class="catalog-list">
-                    <p class="muted">Carregando poderes...</p>
-                </div>
-            </div>
-        </section>
+            
+<div class="panel catalog-panel">
+    <div class="panel-heading">
+        <h2>Catálogo de poderes paranormais</h2>
+
+        <div class="heading-actions">
+            <span id="total-poderes-paranormais">00 registros</span>
+
+            <button
+                type="button"
+                class="btn btn-red"
+                onclick="novoPoderParanormalCatalogo()">
+                + NOVO PODER
+            </button>
+        </div>
+    </div>
+
+    <form id="form-poder-paranormal-catalogo" class="panel" hidden>
+        <h3 id="titulo-form-poder-paranormal">
+            Cadastrar poder paranormal
+        </h3>
+
+        <label class="field-label" for="nome-poder-paranormal">
+            NOME DO PODER
+        </label>
+        <input
+            id="nome-poder-paranormal"
+            class="field"
+            type="text"
+            required>
+
+        <label class="field-label" for="elemento-poder-paranormal">
+            ELEMENTO
+        </label>
+        <select
+            id="elemento-poder-paranormal"
+            class="field"
+            required>
+            <option value="">Selecione um elemento</option>
+            <option value="Conhecimento">Conhecimento</option>
+            <option value="Morte">Morte</option>
+            <option value="Sangue">Sangue</option>
+            <option value="Energia">Energia</option>
+        </select>
+
+        <label class="field-label" for="descricao-poder-paranormal">
+            DESCRIÇÃO DO PODER
+        </label>
+        <textarea
+            id="descricao-poder-paranormal"
+            class="field text-area"
+            rows="5"
+            required></textarea>
+
+        <div class="heading-actions">
+            <button type="submit" class="btn btn-red">
+                SALVAR PODER
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                onclick="cancelarFormularioPoderParanormalCatalogo()">
+                CANCELAR
+            </button>
+        </div>
+    </form>
+
+    <div
+        id="lista-catalogo-poderes-paranormais"
+        class="catalog-list">
+        <p class="muted">Carregando poderes...</p>
+    </div>
+</div>
+
+</section>
 
         <!-- ABA: CONDIÇÕES -->
         <section class="catalog-view"
@@ -396,15 +635,56 @@
                 </div>
             </div>
 
-            <div class="panel catalog-panel">
-                <div class="panel-heading">
-                    <h2>Catálogo de condições</h2>
-                    <span id="total-condicoes">00 registros</span>
-                </div>
-                <div id="lista-catalogo-condicoes" class="catalog-list">
-                    <p class="muted">Carregando condições...</p>
-                </div>
-            </div>
+            
+<div class="panel catalog-panel">
+    <div class="panel-heading">
+        <h2>Catálogo de condições</h2>
+
+        <div class="heading-actions">
+            <span id="total-condicoes">00 registros</span>
+
+            <button type="button" class="btn btn-red"
+                onclick="novaCondicaoCatalogo()">
+                + NOVA CONDIÇÃO
+            </button>
+        </div>
+    </div>
+
+    <form id="form-condicao-catalogo" class="panel" hidden>
+        <h3 id="titulo-form-condicao">Cadastrar condição</h3>
+
+        <label class="field-label" for="nome-condicao">
+            NOME DA CONDIÇÃO
+        </label>
+
+        <input id="nome-condicao" class="field"
+            type="text" required>
+
+        <label class="field-label" for="descricao-condicao">
+            DESCRIÇÃO DA CONDIÇÃO
+        </label>
+
+        <textarea id="descricao-condicao"
+            class="field text-area"
+            rows="5" required></textarea>
+
+        <div class="heading-actions">
+            <button type="submit" class="btn btn-red">
+                SALVAR CONDIÇÃO
+            </button>
+
+            <button type="button" class="btn btn-outline"
+                onclick="cancelarFormularioCondicaoCatalogo()">
+                CANCELAR
+            </button>
+        </div>
+    </form>
+
+    <div id="lista-catalogo-condicoes" class="catalog-list">
+        <p class="muted">Carregando condições...</p>
+    </div>
+</div>
+
         </section>
 		
 		
@@ -420,16 +700,100 @@
         </div>
     </div>
 
-    <div class="panel catalog-panel">
-        <div class="panel-heading">
-            <h2>Catálogo de origens</h2>
-            <span id="total-origens">00 registros</span>
-        </div>
+    
+<div class="panel catalog-panel">
 
-        <div id="lista-catalogo-origens" class="catalog-list">
-            <p class="muted">Carregando origens...</p>
+    <div class="panel-heading">
+        <h2>Catálogo de origens</h2>
+
+        <div class="heading-actions">
+            <span id="total-origens">00 registros</span>
+
+            <button type="button"
+                    class="btn btn-red"
+                    onclick="novaOrigemCatalogo()">
+                + NOVA ORIGEM
+            </button>
         </div>
     </div>
+
+    <form id="form-origem-catalogo" class="panel" hidden>
+
+        <h3 id="titulo-form-origem">
+            Cadastrar origem
+        </h3>
+
+        <label class="field-label" for="nome-origem">
+            NOME DA ORIGEM
+        </label>
+
+        <input
+            id="nome-origem"
+            class="field"
+            type="text"
+            placeholder="Ex.: Acadêmico"
+            required
+        >
+
+        <label class="field-label" for="pericia-origem">
+            PERÍCIA CONCEDIDA
+        </label>
+
+        <input
+            id="pericia-origem"
+            class="field"
+            type="text"
+            placeholder="Ex.: Ciências"
+            required
+        >
+
+        <label class="field-label" for="nome-poder-origem">
+            NOME DO PODER
+        </label>
+
+        <input
+            id="nome-poder-origem"
+            class="field"
+            type="text"
+            placeholder="Ex.: Saber é Poder"
+            required
+        >
+
+        <label class="field-label" for="descricao-poder-origem">
+            DESCRIÇÃO DO PODER
+        </label>
+
+        <textarea
+            id="descricao-poder-origem"
+            class="field text-area"
+            rows="5"
+            placeholder="Descreva o efeito do poder..."
+            required
+        ></textarea>
+
+        <div class="heading-actions">
+
+            <button type="submit" class="btn btn-red">
+                SALVAR ORIGEM
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                onclick="cancelarFormularioOrigemCatalogo()">
+                CANCELAR
+            </button>
+
+        </div>
+
+    </form>
+
+    <div id="lista-catalogo-origens" class="catalog-list">
+        <p class="muted">Carregando origens...</p>
+    </div>
+
+</div>
+
 </section>
 
 <!-- ABA: TRILHAS -->
@@ -444,16 +808,114 @@
         </div>
     </div>
 
-    <div class="panel catalog-panel">
-        <div class="panel-heading">
-            <h2>Catálogo de trilhas</h2>
-            <span id="total-trilhas">00 registros</span>
-        </div>
+    
+<div class="panel catalog-panel">
 
-        <div id="lista-catalogo-trilhas" class="catalog-list">
-            <p class="muted">Carregando trilhas...</p>
+    <div class="panel-heading">
+        <h2>Catálogo de trilhas</h2>
+
+        <div class="heading-actions">
+            <span id="total-trilhas">00 registros</span>
+
+            <button
+                type="button"
+                class="btn btn-red"
+                onclick="novaTrilhaCatalogo()">
+                + NOVA TRILHA
+            </button>
         </div>
     </div>
+
+    <!-- FORMULÁRIO DE CADASTRO / EDIÇÃO -->
+
+    <form id="form-trilha-catalogo" class="panel" hidden>
+
+        <h3 id="titulo-form-trilha">
+            Cadastrar trilha
+        </h3>
+
+        <!-- CLASSE -->
+
+        <label class="field-label" for="classe-trilha">
+            CLASSE DO PERSONAGEM
+        </label>
+
+        <select id="classe-trilha" class="field" required>
+            <option value="">Selecione uma classe</option>
+            <option value="Combatente">Combatente</option>
+            <option value="Especialista">Especialista</option>
+            <option value="Ocultista">Ocultista</option>
+        </select>
+
+        <!-- NOME DA TRILHA -->
+
+        <label class="field-label" for="nome-trilha">
+            NOME DA TRILHA
+        </label>
+
+        <input
+            id="nome-trilha"
+            class="field"
+            type="text"
+            placeholder="Ex.: Aniquilador"
+            required
+        >
+
+        <!-- NOME DA HABILIDADE -->
+
+        <label class="field-label" for="habilidade-trilha">
+            NOME DA HABILIDADE
+        </label>
+
+        <input
+            id="habilidade-trilha"
+            class="field"
+            type="text"
+            placeholder="Ex.: A Favorita"
+            required
+        >
+
+        <!-- DESCRIÇÃO -->
+
+        <label class="field-label" for="descricao-trilha">
+            DESCRIÇÃO DA HABILIDADE
+        </label>
+
+        <textarea
+            id="descricao-trilha"
+            class="field text-area"
+            rows="5"
+            placeholder="Descreva os efeitos da habilidade..."
+            required
+        ></textarea>
+
+        <!-- BOTÕES -->
+
+        <div class="heading-actions">
+
+            <button type="submit" class="btn btn-red">
+                SALVAR TRILHA
+            </button>
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                onclick="cancelarFormularioTrilhaCatalogo()">
+                CANCELAR
+            </button>
+
+        </div>
+
+    </form>
+
+    <!-- LISTA DE TRILHAS -->
+
+    <div id="lista-catalogo-trilhas" class="catalog-list">
+        <p class="muted">Carregando trilhas...</p>
+    </div>
+
+</div>
+
 </section>
 		
 		
@@ -464,6 +926,15 @@ let personagens = [];
 let periciasDisponiveis = [];
 let personagemAtualId = null;
 let periciasFicha = [];
+
+let itensCatalogo = [];
+let itensPersonagem = [];
+let itensCatalogoCarregado = false;
+
+let trilhasDisponiveis = [];
+let poderesClasseDisponiveis = [];
+let poderesParanormaisDisponiveis = [];
+
 
 const campos = {
   nome: 'nome-personagem', nomeJogador: 'jogador-personagem', nivel: 'nivel-personagem',
@@ -480,9 +951,11 @@ document.querySelectorAll('.tab').forEach(botao => botao.addEventListener('click
 Object.values(campos).forEach(id => $(id).addEventListener('input', atualizarResumo));
 
 async function iniciar() {
-  await carregarPericias();
-  await carregarPersonagens();
-  novoPersonagem();
+    await carregarPericias();
+    await carregarCatalogoItens();
+    await carregarCatalogosHabilidades();
+    await carregarPersonagens();
+    novoPersonagem();
 }
 async function carregarPersonagens() {
   try {
@@ -532,6 +1005,8 @@ function novoPersonagem() {
   $('status-ficha').textContent = 'Nova ficha — preencha os dados e salve.';
   document.querySelectorAll('.roster-card').forEach(c => c.classList.remove('active'));
   atualizarResumo();
+  carregarItensPersonagem();
+  carregarHabilidadesPersonagem();
 }
 function selecionarPersonagem(id) {
   const p = personagens.find(x => x.id === id);
@@ -549,6 +1024,8 @@ function selecionarPersonagem(id) {
   $('status-ficha').textContent = 'Ficha carregada.';
   mostrarLista(personagens.filter(x => (x.nome || '').toLowerCase().includes(valor('pesquisa-personagem').toLowerCase())));
   atualizarResumo();
+  carregarItensPersonagem();
+  carregarHabilidadesPersonagem();
 }
 function renderizarPericias() {
   const box = $('campos-pericias'); box.innerHTML = '';
@@ -576,6 +1053,222 @@ function renderizarPericias() {
 
   });
 }
+
+
+async function carregarCatalogoItens() {
+    if (itensCatalogoCarregado) {
+        return;
+    }
+
+    const seletor = $('seletor-item');
+    seletor.innerHTML = '<option value="">Carregando itens...</option>';
+
+    try {
+        const resposta = await fetch('/api/item');
+
+        if (!resposta.ok) {
+            throw new Error(`HTTP ${resposta.status}`);
+        }
+
+        itensCatalogo = await resposta.json();
+        itensCatalogoCarregado = true;
+
+        atualizarSeletorItens();
+    } catch (erro) {
+        console.error('Erro ao carregar catálogo de itens:', erro);
+        seletor.innerHTML =
+            '<option value="">Não foi possível carregar os itens</option>';
+    }
+}
+
+function atualizarSeletorItens() {
+    const seletor = $('seletor-item');
+    seletor.innerHTML = '';
+
+    const opcaoInicial = document.createElement('option');
+    opcaoInicial.value = '';
+    opcaoInicial.textContent = 'Selecione um item...';
+    seletor.appendChild(opcaoInicial);
+
+    const idsAdicionados = new Set(
+        itensPersonagem.map(relacao => String(relacao.itemId))
+    );
+
+    const disponiveis = itensCatalogo.filter(
+        item => !idsAdicionados.has(String(item.id))
+    );
+
+    disponiveis.forEach(item => {
+        const opcao = document.createElement('option');
+        opcao.value = item.id;
+        opcao.textContent =
+            `${item.nome} — ${item.categoria || 'Sem categoria'}`;
+        seletor.appendChild(opcao);
+    });
+
+    if (disponiveis.length === 0) {
+        opcaoInicial.textContent = itensCatalogo.length
+            ? 'Todos os itens já foram adicionados'
+            : 'Nenhum item cadastrado no catálogo';
+    }
+}
+
+async function carregarItensPersonagem() {
+    const lista = $('lista-itens-personagem');
+
+    if (personagemAtualId == null) {
+        itensPersonagem = [];
+        atualizarSeletorItens();
+        lista.innerHTML =
+            '<p class="muted">Salve o personagem antes de adicionar itens.</p>';
+        return;
+    }
+
+    lista.innerHTML = '<p class="muted">Carregando inventário...</p>';
+
+    try {
+        await carregarCatalogoItens();
+
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/itens`
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`HTTP ${resposta.status}`);
+        }
+
+        itensPersonagem = await resposta.json();
+
+        renderizarItensPersonagem();
+        atualizarSeletorItens();
+    } catch (erro) {
+        console.error('Erro ao carregar itens do personagem:', erro);
+        lista.innerHTML =
+            '<p class="muted">Não foi possível carregar o inventário. Confira o console e as rotas da API.</p>';
+    }
+}
+
+function renderizarItensPersonagem() {
+    const lista = $('lista-itens-personagem');
+    lista.innerHTML = '';
+
+    if (itensPersonagem.length === 0) {
+        lista.innerHTML =
+            '<p class="muted">Este personagem ainda não possui itens.</p>';
+        return;
+    }
+
+    itensPersonagem.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'catalog-item';
+
+        // Nome do item
+        const titulo = document.createElement('h3');
+        titulo.textContent = item.nome;
+
+        // Categoria e classificação
+        const detalhes = document.createElement('p');
+        detalhes.className = 'muted';
+        detalhes.textContent =
+            `Categoria: ${item.categoria || 'Não informada'} | ` +
+            `Classificação: ${item.classificacao || 'Não informada'} | ` +
+            `Quantidade: ${item.quantidade}`;
+
+        // Dano e crítico
+        const combate = document.createElement('p');
+        combate.textContent =
+            `Dano: ${item.dano || 'Não informado'} | ` +
+            `Crítico: ${item.critico ?? 'Não informado'}`;
+
+        // Botão para remover o item
+        const remover = document.createElement('button');
+        remover.type = 'button';
+        remover.className = 'btn btn-danger-outline';
+        remover.textContent = 'REMOVER';
+
+        remover.addEventListener('click', () => {
+            removerItemDoPersonagem(item.itemId);
+        });
+
+        card.append(titulo, detalhes, combate, remover);
+        lista.appendChild(card);
+    });
+}
+
+async function adicionarItemAoPersonagem() {
+    if (personagemAtualId == null) {
+        alert('Salve o personagem antes de adicionar itens.');
+        return;
+    }
+
+    const itemId = Number($('seletor-item').value);
+    const quantidade = Number($('quantidade-item').value);
+
+    if (!itemId) {
+        alert('Selecione um item do catálogo.');
+        return;
+    }
+
+    if (!Number.isInteger(quantidade) || quantidade < 1) {
+        alert('Informe uma quantidade inteira maior que zero.');
+        return;
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/itens`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ itemId, quantidade })
+            }
+        );
+
+        if (!resposta.ok) {
+            const detalhe = await resposta.text();
+            throw new Error(`HTTP ${resposta.status}: ${detalhe}`);
+        }
+
+        await carregarItensPersonagem();
+        $('quantidade-item').value = 1;
+        $('status-ficha').textContent = 'Item adicionado ao personagem.';
+    } catch (erro) {
+        console.error('Erro ao adicionar item:', erro);
+        alert('Não foi possível adicionar o item. Confira o console.');
+    }
+}
+
+async function removerItemDoPersonagem(itemId) {
+    if (personagemAtualId == null) {
+        return;
+    }
+
+    if (!confirm('Deseja remover este item da ficha?')) {
+        return;
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/itens/${itemId}`,
+            { method: 'DELETE' }
+        );
+
+        if (!resposta.ok) {
+            const detalhe = await resposta.text();
+            throw new Error(`HTTP ${resposta.status}: ${detalhe}`);
+        }
+
+        await carregarItensPersonagem();
+        $('status-ficha').textContent = 'Item removido da ficha.';
+    } catch (erro) {
+        console.error('Erro ao remover item:', erro);
+        alert('Não foi possível remover o item. Confira o console.');
+    }
+}
+
+
 function adicionarPericiaManual() {
   document.querySelector('.tabs .tab[data-tab="pericias"]').click();
   $('campos-pericias').scrollIntoView({behavior:'smooth',block:'start'});
@@ -708,6 +1401,7 @@ const configuracaoCatalogos = {
             p.poderOrigem
                 ? `Descrição do poder: ${p.poderOrigem}`
                 : null
+
         ].filter(Boolean).join('\n')
     },
 
@@ -730,27 +1424,42 @@ const configuracaoCatalogos = {
 
 const catalogosCarregados = new Set();
 
-function trocarAbaPrincipal(aba) {
-    document.querySelectorAll('[data-view-content]').forEach(secao => {
-        secao.hidden = secao.dataset.viewContent !== aba;
-    });
 
-    document.querySelectorAll('.nav-tab').forEach(botao => {
-        const selecionado = botao.dataset.view === aba;
-        botao.classList.toggle('selected', selecionado);
-        botao.setAttribute('aria-current', selecionado ? 'page' : 'false');
-    });
+function trocarAbaPrincipal(aba) {
+
+    document.querySelectorAll('[data-view-content]')
+        .forEach(secao => {
+            secao.hidden =
+                secao.dataset.viewContent !== aba;
+        });
+
+    document.querySelectorAll('.nav-tab')
+        .forEach(botao => {
+
+            const selecionado =
+                botao.dataset.view === aba;
+
+            botao.classList.toggle(
+                'selected',
+                selecionado
+            );
+        });
 
     if (aba !== 'personagens') {
         carregarCatalogo(aba);
     }
 }
 
+
 document.querySelectorAll('.nav-tab').forEach(botao => {
+
     botao.addEventListener('click', () => {
         trocarAbaPrincipal(botao.dataset.view);
     });
+
 });
+
+
 
 async function carregarCatalogo(tipo) {
     const config = configuracaoCatalogos[tipo];
@@ -767,6 +1476,30 @@ async function carregarCatalogo(tipo) {
         }
 
         const registros = await resposta.json();
+        
+        if (tipo === 'trilhas') {
+            trilhasCatalogo = registros;
+        }
+        
+        if (tipo === 'origens') {
+            origensCatalogo = registros;
+        }
+        
+        if (tipo === 'condicoes') {
+            condicoesCatalogo = registros;
+        }
+        
+        if (tipo === 'poderes-paranormais') {
+            poderesParanormaisCatalogo = registros;
+        }
+        
+        if (tipo === 'poderes-classe') {
+            poderesClasseCatalogo = registros;
+        }
+        
+        if (tipo === 'rituais') {
+            rituaisCatalogo = registros;
+        }
 
         $(config.total).textContent =
             `${registros.length} registro(s)`;
@@ -779,6 +1512,8 @@ async function carregarCatalogo(tipo) {
             catalogosCarregados.add(tipo);
             return;
         }
+
+
 
         registros.forEach(registro => {
             const card = document.createElement('article');
@@ -793,8 +1528,188 @@ async function carregarCatalogo(tipo) {
                 config.detalhes(registro) || 'Sem descrição cadastrada.';
 
             card.append(titulo, descricao);
+
+            // Botões de edição e exclusão dos rituais
+            if (tipo === 'rituais') {
+                const acoes = document.createElement('div');
+                acoes.className = 'heading-actions';
+
+                const editar = document.createElement('button');
+                editar.type = 'button';
+                editar.className = 'btn btn-outline';
+                editar.textContent = 'EDITAR';
+                editar.addEventListener(
+                    'click',
+                    () => editarRitual(registro.id)
+                );
+
+                const excluir = document.createElement('button');
+                excluir.type = 'button';
+                excluir.className = 'btn btn-danger-outline';
+                excluir.textContent = 'EXCLUIR';
+                excluir.addEventListener(
+                    'click',
+                    () => excluirRitual(registro.id)
+                );
+
+                acoes.append(editar, excluir);
+                card.appendChild(acoes);
+            }
+
+            // Botões de edição e exclusão dos poderes de classe
+            if (tipo === 'poderes-classe') {
+                const acoes = document.createElement('div');
+                acoes.className = 'heading-actions';
+
+                const editar = document.createElement('button');
+                editar.type = 'button';
+                editar.className = 'btn btn-outline';
+                editar.textContent = 'EDITAR';
+                editar.addEventListener(
+                    'click',
+                    () => editarPoderClasse(registro.id)
+                );
+
+                const excluir = document.createElement('button');
+                excluir.type = 'button';
+                excluir.className = 'btn btn-danger-outline';
+                excluir.textContent = 'EXCLUIR';
+                excluir.addEventListener(
+                    'click',
+                    () => excluirPoderClasse(registro.id)
+                );
+
+                acoes.append(editar, excluir);
+                card.appendChild(acoes);
+            }
+            
+            // Botões de edição e exclusão dos poderes paranormais
+            if (tipo === 'poderes-paranormais') {
+                const acoes = document.createElement('div');
+                acoes.className = 'heading-actions';
+
+                const editar = document.createElement('button');
+                editar.type = 'button';
+                editar.className = 'btn btn-outline';
+                editar.textContent = 'EDITAR';
+
+                editar.addEventListener('click', () =>
+                    editarPoderParanormalCatalogo(registro.id)
+                );
+
+                const excluir = document.createElement('button');
+                excluir.type = 'button';
+                excluir.className = 'btn btn-danger-outline';
+                excluir.textContent = 'EXCLUIR';
+
+                excluir.addEventListener('click', () =>
+                    excluirPoderParanormalCatalogo(registro.id)
+                );
+
+                acoes.append(editar, excluir);
+                card.appendChild(acoes);
+            }
+            
+            // Botões de edição e exclusão das condições
+
+            if (tipo === 'condicoes') {
+                const acoes = document.createElement('div');
+                acoes.className = 'heading-actions';
+
+                const editar = document.createElement('button');
+                editar.type = 'button';
+                editar.className = 'btn btn-outline';
+                editar.textContent = 'EDITAR';
+
+                editar.addEventListener('click', () => {
+                    editarCondicaoCatalogo(registro.id);
+                });
+
+                const excluir = document.createElement('button');
+                excluir.type = 'button';
+                excluir.className = 'btn btn-danger-outline';
+                excluir.textContent = 'EXCLUIR';
+
+                excluir.addEventListener('click', () => {
+                    excluirCondicaoCatalogo(registro.id);
+                });
+
+                acoes.append(editar, excluir);
+                card.appendChild(acoes);
+            }
+            
+         // Botões de edição e exclusão das origens
+
+            if (tipo === 'origens') {
+
+                const acoes = document.createElement('div');
+                acoes.className = 'heading-actions';
+
+                const editar = document.createElement('button');
+
+                editar.type = 'button';
+                editar.className = 'btn btn-outline';
+                editar.textContent = 'EDITAR';
+
+                editar.addEventListener('click', () => {
+                    editarOrigemCatalogo(registro.id);
+                });
+
+                const excluir = document.createElement('button');
+
+                excluir.type = 'button';
+                excluir.className = 'btn btn-danger-outline';
+                excluir.textContent = 'EXCLUIR';
+
+                excluir.addEventListener('click', () => {
+                    excluirOrigemCatalogo(registro.id);
+                });
+
+
+                acoes.append(editar, excluir);
+
+                card.appendChild(acoes);
+            }
+         
+         // Botões de edição e exclusão das trilhas
+            if (tipo === 'trilhas') {
+
+                const acoes = document.createElement('div');
+                acoes.className = 'heading-actions';
+
+                const editar = document.createElement('button');
+
+                editar.type = 'button';
+                editar.className = 'btn btn-outline';
+                editar.textContent = 'EDITAR';
+
+                editar.addEventListener('click', () => {
+                    editarTrilhaCatalogo(registro.id);
+                });
+
+                const excluir = document.createElement('button');
+
+                excluir.type = 'button';
+                excluir.className = 'btn btn-danger-outline';
+                excluir.textContent = 'EXCLUIR';
+
+                excluir.addEventListener('click', () => {
+                    excluirTrilhaCatalogo(registro.id);
+                });
+
+
+                acoes.append(editar, excluir);
+
+                card.appendChild(acoes);
+            }
+
+
+
+
+
             container.appendChild(card);
         });
+
 
         catalogosCarregados.add(tipo);
     } catch (erro) {
@@ -806,6 +1721,1391 @@ async function carregarCatalogo(tipo) {
         $(config.total).textContent = 'Indisponível';
     }
 }
+
+async function carregarCatalogosHabilidades() {
+    try {
+        const [rTrilhas, rPoderes, rParanormais] = await Promise.all([
+            fetch('/api/personagem/trilha'),
+            fetch('/api/personagem/poder'),
+            fetch('/api/personagem/poderParanormal')
+        ]);
+
+        if (!rTrilhas.ok || !rPoderes.ok || !rParanormais.ok) {
+            throw new Error('Não foi possível carregar os catálogos.');
+        }
+
+        trilhasDisponiveis = await rTrilhas.json();
+        poderesClasseDisponiveis = await rPoderes.json();
+        poderesParanormaisDisponiveis = await rParanormais.json();
+
+        preencherSeletorHabilidades(
+            'seletor-trilha',
+            trilhasDisponiveis,
+            'trilhaPersonagem',
+            'Selecione uma trilha'
+        );
+
+        preencherSeletorHabilidades(
+            'seletor-poder-classe',
+            poderesClasseDisponiveis,
+            'nomePoderPersonagem',
+            'Selecione um poder de classe'
+        );
+
+        preencherSeletorHabilidades(
+            'seletor-poder-paranormal',
+            poderesParanormaisDisponiveis,
+            'nomePoderParanormal',
+            'Selecione um poder paranormal'
+        );
+
+    } catch (erro) {
+        console.error('Erro ao carregar habilidades:', erro);
+
+        ['seletor-trilha', 'seletor-poder-classe',
+         'seletor-poder-paranormal'].forEach(id => {
+            $(id).innerHTML = '<option value="">Erro ao carregar</option>';
+        });
+    }
+}
+
+
+function preencherSeletorHabilidades(id, registros, campoNome, textoInicial) {
+    const seletor = $(id);
+    seletor.innerHTML = '';
+
+    const opcaoInicial = document.createElement('option');
+    opcaoInicial.value = '';
+    opcaoInicial.textContent = textoInicial;
+    seletor.appendChild(opcaoInicial);
+
+    registros.forEach(registro => {
+        const opcao = document.createElement('option');
+        opcao.value = registro.id;
+        opcao.textContent = registro[campoNome] || 'Registro sem nome';
+        seletor.appendChild(opcao);
+    });
+}
+
+
+async function carregarHabilidadesPersonagem() {
+    if (personagemAtualId == null) {
+        renderizarHabilidadesPersonagem({
+            trilha: null,
+            poderesClasse: [],
+            poderesParanormais: []
+        });
+        return;
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/habilidades`
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
+        const habilidades = await resposta.json();
+        renderizarHabilidadesPersonagem(habilidades);
+
+    } catch (erro) {
+        console.error('Erro ao carregar habilidades do personagem:', erro);
+    }
+}
+
+
+
+
+function renderizarHabilidadesPersonagem(habilidades) {
+    // Trilhas
+    const areaTrilha = $('trilha-personagem');
+    areaTrilha.innerHTML = '';
+
+    const trilhas = habilidades.trilhas || [];
+
+    if (trilhas.length > 0) {
+        trilhas.forEach(trilha => {
+            const card = document.createElement('article');
+            card.className = 'catalog-item';
+
+            const titulo = document.createElement('h4');
+            titulo.textContent = trilha.trilhaPersonagem;
+
+            const detalhes = document.createElement('p');
+            detalhes.className = 'muted';
+            detalhes.textContent =
+                `${trilha.classePersonagem || 'Classe não informada'} | ` +
+                `${trilha.nomeHabilidadeTrilhaPersonagem || 'Habilidade não informada'}`;
+
+            const descricao = document.createElement('p');
+            descricao.textContent = trilha.descTrilhaPersonagem || '';
+
+            const remover = document.createElement('button');
+            remover.type = 'button';
+            remover.className = 'btn btn-danger-outline';
+            remover.textContent = 'REMOVER TRILHA';
+
+            // Remove somente a trilha deste card
+            remover.addEventListener('click', () => {
+                removerTrilhaPersonagem(trilha.id);
+            });
+
+            card.append(titulo, detalhes, descricao, remover);
+            areaTrilha.appendChild(card);
+        });
+    } else {
+        areaTrilha.innerHTML =
+            '<p class="muted">Nenhuma trilha vinculada.</p>';
+    }
+
+    // Não seleciona automaticamente uma trilha já vinculada.
+    // Assim, o seletor fica disponível para adicionar outra.
+    $('seletor-trilha').value = '';
+
+    // Poderes de classe
+    renderizarListaPoderes(
+        'poderes-classe-personagem',
+        habilidades.poderesClasse || [],
+        'classe'
+    );
+
+    // Poderes paranormais
+    renderizarListaPoderes(
+        'poderes-paranormais-personagem',
+        habilidades.poderesParanormais || [],
+        'paranormal'
+    );
+}
+
+
+
+function renderizarListaPoderes(elementoId, poderes, tipo) {
+    const area = $(elementoId);
+    area.innerHTML = '';
+
+    if (poderes.length === 0) {
+        area.innerHTML = tipo === 'classe'
+            ? '<p class="muted">Nenhum poder de classe vinculado.</p>'
+            : '<p class="muted">Nenhum poder paranormal vinculado.</p>';
+        return;
+    }
+
+    poderes.forEach(poder => {
+        const card = document.createElement('article');
+        card.className = 'catalog-item';
+
+        const titulo = document.createElement('h4');
+        titulo.textContent = tipo === 'classe'
+            ? poder.nomePoderPersonagem
+            : poder.nomePoderParanormal;
+
+        const detalhes = document.createElement('p');
+        detalhes.className = 'muted';
+
+        const descricao = document.createElement('p');
+
+        if (tipo === 'classe') {
+            detalhes.textContent = 'Poder de classe';
+            descricao.textContent = poder.poderPersonagem || '';
+        } else {
+            detalhes.textContent =
+                `Elemento: ${poder.elementoPoder || 'Não informado'}`;
+            descricao.textContent = poder.descPoderParanormal || '';
+        }
+
+        const remover = document.createElement('button');
+        remover.type = 'button';
+        remover.className = 'btn btn-danger-outline';
+        remover.textContent = 'REMOVER';
+
+        remover.addEventListener('click', () => {
+            if (tipo === 'classe') {
+                removerPoderClasse(poder.id);
+            } else {
+                removerPoderParanormal(poder.id);
+            }
+        });
+
+        card.append(titulo, detalhes, descricao, remover);
+        area.appendChild(card);
+    });
+}
+
+async function vincularTrilhaSelecionada() {
+    if (personagemAtualId == null) {
+        alert('Salve o personagem antes de vincular uma trilha.');
+        return;
+    }
+
+    const trilhaId = $('seletor-trilha').value;
+
+    if (!trilhaId) {
+        alert('Selecione uma trilha.');
+        return;
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/trilha/${trilhaId}`,
+            { method: 'PUT' }
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
+        await carregarHabilidadesPersonagem();
+        $('status-ficha').textContent = 'Trilha vinculada com sucesso!';
+
+    } catch (erro) {
+        console.error(erro);
+        alert('Não foi possível vincular a trilha.');
+    }
+}
+
+
+async function removerTrilhaPersonagem(trilhaId) {
+    if (!personagemAtualId) {
+        alert("Selecione um personagem primeiro.");
+        return;
+    }
+
+    const resposta = await fetch(
+        `/api/personagem/personagens/${personagemAtualId}/trilha/${trilhaId}`,
+        { method: "DELETE" }
+    );
+
+    if (!resposta.ok) {
+        alert("Não foi possível remover a trilha.");
+        return;
+    }
+
+    await carregarHabilidadesPersonagem();
+}
+
+
+async function adicionarPoderClasseSelecionado() {
+    const poderId = $('seletor-poder-classe').value;
+
+    if (personagemAtualId == null) {
+        alert('Salve o personagem antes de adicionar poderes.');
+        return;
+    }
+
+    if (!poderId) {
+        alert('Selecione um poder de classe.');
+        return;
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/poderes/${poderId}`,
+            { method: 'PUT' }
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
+        await carregarHabilidadesPersonagem();
+        $('seletor-poder-classe').value = '';
+        $('status-ficha').textContent = 'Poder de classe adicionado!';
+
+    } catch (erro) {
+        console.error(erro);
+        alert('Não foi possível adicionar o poder de classe.');
+    }
+}
+
+
+async function removerPoderClasse(poderId) {
+    if (!confirm('Deseja remover este poder de classe?')) return;
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/poderes/${poderId}`,
+            { method: 'DELETE' }
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
+        await carregarHabilidadesPersonagem();
+        $('status-ficha').textContent = 'Poder de classe removido.';
+
+    } catch (erro) {
+        console.error(erro);
+        alert('Não foi possível remover o poder de classe.');
+    }
+}
+
+
+async function adicionarPoderParanormalSelecionado() {
+    const poderId = $('seletor-poder-paranormal').value;
+
+    if (personagemAtualId == null) {
+        alert('Salve o personagem antes de adicionar poderes.');
+        return;
+    }
+
+    if (!poderId) {
+        alert('Selecione um poder paranormal.');
+        return;
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/poderes-paranormais/${poderId}`,
+            { method: 'PUT' }
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
+        await carregarHabilidadesPersonagem();
+        $('seletor-poder-paranormal').value = '';
+        $('status-ficha').textContent = 'Poder paranormal adicionado!';
+
+    } catch (erro) {
+        console.error(erro);
+        alert('Não foi possível adicionar o poder paranormal.');
+    }
+}
+
+
+async function removerPoderParanormal(poderId) {
+    if (!confirm('Deseja remover este poder paranormal?')) return;
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/personagens/${personagemAtualId}/poderes-paranormais/${poderId}`,
+            { method: 'DELETE' }
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
+        await carregarHabilidadesPersonagem();
+        $('status-ficha').textContent = 'Poder paranormal removido.';
+
+    } catch (erro) {
+        console.error(erro);
+        alert('Não foi possível remover o poder paranormal.');
+    }
+}
+
+
+let rituaisCatalogo = [];
+let ritualEmEdicaoId = null;
+
+function novoRitual() {
+    ritualEmEdicaoId = null;
+
+    $('form-ritual').reset();
+    $('titulo-form-ritual').textContent = 'Cadastrar ritual';
+    $('form-ritual').hidden = false;
+
+    $('nome-ritual').focus();
+}
+
+function editarRitual(id) {
+    const ritual = rituaisCatalogo.find(r => r.id === id);
+
+    if (!ritual) {
+        alert('Ritual não encontrado.');
+        return;
+    }
+
+    ritualEmEdicaoId = ritual.id;
+
+    $('nome-ritual').value = ritual.nomeRitual || '';
+    $('execucao-ritual').value = ritual.execucaoRitual || '';
+    $('alvo-ritual').value = ritual.alvoRitual || '';
+    $('duracao-ritual').value = ritual.duracaoRitual || '';
+    $('resistencia-ritual').value = ritual.resistenciaRitual || '';
+    $('desc-ritual').value = ritual.descRitual || '';
+
+    $('titulo-form-ritual').textContent = 'Editar ritual';
+    $('form-ritual').hidden = false;
+
+    $('nome-ritual').focus();
+}
+
+function cancelarFormularioRitual() {
+    ritualEmEdicaoId = null;
+    $('form-ritual').reset();
+    $('form-ritual').hidden = true;
+}
+
+
+$('form-ritual').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const dados = {
+        nomeRitual: $('nome-ritual').value.trim(),
+        execucaoRitual: $('execucao-ritual').value.trim(),
+        alvoRitual: $('alvo-ritual').value.trim(),
+        duracaoRitual: $('duracao-ritual').value.trim(),
+        resistenciaRitual: $('resistencia-ritual').value.trim(),
+        descRitual: $('desc-ritual').value.trim()
+    };
+
+    if (
+        !dados.nomeRitual ||
+        !dados.execucaoRitual ||
+        !dados.alvoRitual ||
+        !dados.duracaoRitual ||
+        !dados.descRitual
+    ) {
+        alert('Preencha os campos obrigatórios.');
+        return;
+    }
+
+    const editando = ritualEmEdicaoId !== null;
+
+    const url = editando
+        ? `/api/personagem/ritual/${ritualEmEdicaoId}`
+        : '/api/personagem/ritual';
+
+    try {
+        const resposta = await fetch(url, {
+            method: editando ? 'PUT' : 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams(dados)
+        });
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
+        cancelarFormularioRitual();
+
+        // Atualiza a lista e os botões
+        catalogosCarregados.delete('rituais');
+        await carregarCatalogo('rituais');
+
+        alert(editando
+            ? 'Ritual atualizado com sucesso!'
+            : 'Ritual cadastrado com sucesso!');
+
+    } catch (erro) {
+        console.error('Erro ao salvar ritual:', erro);
+        alert('Não foi possível salvar o ritual. Confira o console e o servidor.');
+    }
+});
+
+
+async function excluirRitual(id) {
+    const confirmado = confirm(
+        'Tem certeza de que deseja excluir este ritual?'
+    );
+
+    if (!confirmado) return;
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/ritual/${id}`,
+            { method: 'DELETE' }
+        );
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP ${resposta.status}`);
+        }
+
+        cancelarFormularioRitual();
+
+        catalogosCarregados.delete('rituais');
+        await carregarCatalogo('rituais');
+
+        alert('Ritual excluído com sucesso!');
+
+    } catch (erro) {
+        console.error('Erro ao excluir ritual:', erro);
+        alert('Não foi possível excluir o ritual.');
+    }
+}
+
+
+let poderesClasseCatalogo = [];
+let poderClasseEmEdicaoId = null;
+
+function novoPoderClasse() {
+    poderClasseEmEdicaoId = null;
+
+    $('form-poder-classe').reset();
+
+    $('titulo-form-poder-classe').textContent =
+        'Cadastrar poder de classe';
+
+    $('form-poder-classe').hidden = false;
+    $('nome-poder-classe').focus();
+}
+
+function editarPoderClasse(id) {
+    const poder = poderesClasseCatalogo.find(
+        p => String(p.id) === String(id)
+    );
+
+    if (!poder) {
+        alert('Poder de classe não encontrado.');
+        return;
+    }
+
+    poderClasseEmEdicaoId = poder.id;
+
+    $('nome-poder-classe').value =
+        poder.nomePoderPersonagem || '';
+
+    $('descricao-poder-classe').value =
+        poder.poderPersonagem || '';
+
+    $('titulo-form-poder-classe').textContent =
+        'Editar poder de classe';
+
+    $('form-poder-classe').hidden = false;
+    $('nome-poder-classe').focus();
+}
+
+function cancelarFormularioPoderClasse() {
+    poderClasseEmEdicaoId = null;
+
+    $('form-poder-classe').reset();
+    $('form-poder-classe').hidden = true;
+}
+
+$('form-poder-classe').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const dados = {
+        nomePoderPersonagem:
+            $('nome-poder-classe').value.trim(),
+
+        poderPersonagem:
+            $('descricao-poder-classe').value.trim()
+    };
+
+    if (!dados.nomePoderPersonagem || !dados.poderPersonagem) {
+        alert('Preencha o nome e a descrição do poder.');
+        return;
+    }
+
+    const editando = poderClasseEmEdicaoId !== null;
+
+    const url = editando
+        ? `/api/personagem/poder/${poderClasseEmEdicaoId}`
+        : '/api/personagem/poder';
+
+    try {
+        const resposta = await fetch(url, {
+            method: editando ? 'PUT' : 'POST',
+            headers: {
+                'Content-Type':
+                    'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: new URLSearchParams(dados)
+        });
+
+        if (!resposta.ok) {
+            const detalhe = await resposta.text();
+            throw new Error(
+                `HTTP ${resposta.status}: ${detalhe}`
+            );
+        }
+
+        cancelarFormularioPoderClasse();
+
+        catalogosCarregados.delete('poderes-classe');
+        await carregarCatalogo('poderes-classe');
+
+        alert(editando
+            ? 'Poder de classe atualizado com sucesso!'
+            : 'Poder de classe cadastrado com sucesso!');
+
+    } catch (erro) {
+        console.error('Erro ao salvar poder de classe:', erro);
+        alert('Não foi possível salvar o poder de classe. Confira o console e o servidor.');
+    }
+});
+
+async function excluirPoderClasse(id) {
+    const confirmado = confirm(
+        'Tem certeza de que deseja excluir este poder de classe?'
+    );
+
+    if (!confirmado) return;
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/poder/${id}`,
+            { method: 'DELETE' }
+        );
+
+        if (!resposta.ok) {
+            const detalhe = await resposta.text();
+            throw new Error(
+                `HTTP ${resposta.status}: ${detalhe}`
+            );
+        }
+
+        if (String(poderClasseEmEdicaoId) === String(id)) {
+            cancelarFormularioPoderClasse();
+        }
+
+        catalogosCarregados.delete('poderes-classe');
+        await carregarCatalogo('poderes-classe');
+
+        alert('Poder de classe excluído com sucesso!');
+
+    } catch (erro) {
+        console.error('Erro ao excluir poder de classe:', erro);
+        alert('Não foi possível excluir o poder de classe.');
+    }
+}
+
+
+let poderesParanormaisCatalogo = [];
+let poderParanormalCatalogoEmEdicaoId = null;
+
+function novoPoderParanormalCatalogo() {
+    poderParanormalCatalogoEmEdicaoId = null;
+
+    $('form-poder-paranormal-catalogo').reset();
+
+    $('titulo-form-poder-paranormal').textContent =
+        'Cadastrar poder paranormal';
+
+    $('form-poder-paranormal-catalogo').hidden = false;
+    $('nome-poder-paranormal').focus();
+}
+
+function editarPoderParanormalCatalogo(id) {
+    const poder = poderesParanormaisCatalogo.find(
+        p => String(p.id) === String(id)
+    );
+
+    if (!poder) {
+        alert('Poder paranormal não encontrado.');
+        return;
+    }
+
+    poderParanormalCatalogoEmEdicaoId = poder.id;
+
+    $('nome-poder-paranormal').value =
+        poder.nomePoderParanormal || '';
+
+    $('elemento-poder-paranormal').value =
+        poder.elementoPoder || '';
+
+    $('descricao-poder-paranormal').value =
+        poder.descPoderParanormal || '';
+
+    $('titulo-form-poder-paranormal').textContent =
+        'Editar poder paranormal';
+
+    $('form-poder-paranormal-catalogo').hidden = false;
+    $('nome-poder-paranormal').focus();
+}
+
+function cancelarFormularioPoderParanormalCatalogo() {
+    poderParanormalCatalogoEmEdicaoId = null;
+
+    $('form-poder-paranormal-catalogo').reset();
+    $('form-poder-paranormal-catalogo').hidden = true;
+}
+
+$('form-poder-paranormal-catalogo').addEventListener(
+    'submit',
+    async function(event) {
+        event.preventDefault();
+
+        const dados = {
+            nomePoderParanormal:
+                $('nome-poder-paranormal').value.trim(),
+
+            elementoPoder:
+                $('elemento-poder-paranormal').value,
+
+            descPoderParanormal:
+                $('descricao-poder-paranormal').value.trim()
+        };
+
+        if (
+            !dados.nomePoderParanormal ||
+            !dados.elementoPoder ||
+            !dados.descPoderParanormal
+        ) {
+            alert('Preencha o nome, o elemento e a descrição.');
+            return;
+        }
+
+        const editando =
+            poderParanormalCatalogoEmEdicaoId !== null;
+
+        const url = editando
+            ? `/api/personagem/poderParanormal/${poderParanormalCatalogoEmEdicaoId}`
+            : '/api/personagem/poderParanormal';
+
+        try {
+            const resposta = await fetch(url, {
+                method: editando ? 'PUT' : 'POST',
+                headers: {
+                    'Content-Type':
+                        'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                body: new URLSearchParams(dados)
+            });
+
+            if (!resposta.ok) {
+                const detalhe = await resposta.text();
+                throw new Error(
+                    `HTTP ${resposta.status}: ${detalhe}`
+                );
+            }
+
+            cancelarFormularioPoderParanormalCatalogo();
+
+            catalogosCarregados.delete('poderes-paranormais');
+            await carregarCatalogo('poderes-paranormais');
+
+            alert(editando
+                ? 'Poder paranormal atualizado com sucesso!'
+                : 'Poder paranormal cadastrado com sucesso!');
+
+        } catch (erro) {
+            console.error('Erro ao salvar poder paranormal:', erro);
+            alert('Não foi possível salvar o poder paranormal. Confira o console e o servidor.');
+        }
+    }
+);
+
+async function excluirPoderParanormalCatalogo(id) {
+    const confirmado = confirm(
+        'Tem certeza de que deseja excluir este poder paranormal?'
+    );
+
+    if (!confirmado) return;
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/poderParanormal/${id}`,
+            { method: 'DELETE' }
+        );
+
+        if (!resposta.ok) {
+            const detalhe = await resposta.text();
+            throw new Error(
+                `HTTP ${resposta.status}: ${detalhe}`
+            );
+        }
+
+        if (
+            String(poderParanormalCatalogoEmEdicaoId) === String(id)
+        ) {
+            cancelarFormularioPoderParanormalCatalogo();
+        }
+
+        catalogosCarregados.delete('poderes-paranormais');
+        await carregarCatalogo('poderes-paranormais');
+
+        alert('Poder paranormal excluído com sucesso!');
+
+    } catch (erro) {
+        console.error('Erro ao excluir poder paranormal:', erro);
+        alert('Não foi possível excluir o poder paranormal.');
+    }
+}
+
+
+let condicoesCatalogo = [];
+let condicaoCatalogoEmEdicaoId = null;
+
+function novaCondicaoCatalogo() {
+    condicaoCatalogoEmEdicaoId = null;
+
+    $('form-condicao-catalogo').reset();
+
+    $('titulo-form-condicao').textContent =
+        'Cadastrar condição';
+
+    $('form-condicao-catalogo').hidden = false;
+    $('nome-condicao').focus();
+}
+
+function editarCondicaoCatalogo(id) {
+    const condicao = condicoesCatalogo.find(
+        c => String(c.id) === String(id)
+    );
+
+    if (!condicao) {
+        alert('Condição não encontrada.');
+        return;
+    }
+
+    condicaoCatalogoEmEdicaoId = condicao.id;
+
+    $('nome-condicao').value =
+        condicao.nomeCondicao || '';
+
+    $('descricao-condicao').value =
+        condicao.descCondicao || '';
+
+    $('titulo-form-condicao').textContent =
+        'Editar condição';
+
+    $('form-condicao-catalogo').hidden = false;
+    $('nome-condicao').focus();
+}
+
+function cancelarFormularioCondicaoCatalogo() {
+    condicaoCatalogoEmEdicaoId = null;
+
+    $('form-condicao-catalogo').reset();
+    $('form-condicao-catalogo').hidden = true;
+}
+
+$('form-condicao-catalogo').addEventListener(
+    'submit',
+    async function(event) {
+        event.preventDefault();
+
+        const dados = {
+            nomeCondicao: $('nome-condicao').value.trim(),
+            descCondicao: $('descricao-condicao').value.trim()
+        };
+
+        if (!dados.nomeCondicao || !dados.descCondicao) {
+            alert('Preencha o nome e a descrição da condição.');
+            return;
+        }
+
+        const editando = condicaoCatalogoEmEdicaoId !== null;
+
+        const url = editando
+            ? `/api/personagem/condicao/${condicaoCatalogoEmEdicaoId}`
+            : '/api/personagem/condicao';
+
+        try {
+            const resposta = await fetch(url, {
+                method: editando ? 'PUT' : 'POST',
+                headers: {
+                    'Content-Type':
+                        'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+                body: new URLSearchParams(dados)
+            });
+
+            if (!resposta.ok) {
+                const detalhe = await resposta.text();
+                throw new Error(
+                    `HTTP ${resposta.status}: ${detalhe}`
+                );
+            }
+
+            cancelarFormularioCondicaoCatalogo();
+
+            catalogosCarregados.delete('condicoes');
+            await carregarCatalogo('condicoes');
+
+            alert(editando
+                ? 'Condição atualizada com sucesso!'
+                : 'Condição cadastrada com sucesso!');
+
+        } catch (erro) {
+            console.error('Erro ao salvar condição:', erro);
+            alert(
+                'Não foi possível salvar a condição. ' +
+                'Confira o console e o servidor.'
+            );
+        }
+    }
+);
+
+async function excluirCondicaoCatalogo(id) {
+    if (!confirm(
+        'Tem certeza de que deseja excluir esta condição?'
+    )) {
+        return;
+    }
+
+    try {
+        const resposta = await fetch(
+            `/api/personagem/condicao/${id}`,
+            { method: 'DELETE' }
+        );
+
+        if (!resposta.ok) {
+            const detalhe = await resposta.text();
+            throw new Error(
+                `HTTP ${resposta.status}: ${detalhe}`
+            );
+        }
+
+        if (
+            String(condicaoCatalogoEmEdicaoId) === String(id)
+        ) {
+            cancelarFormularioCondicaoCatalogo();
+        }
+
+        catalogosCarregados.delete('condicoes');
+        await carregarCatalogo('condicoes');
+
+        alert('Condição excluída com sucesso!');
+
+    } catch (erro) {
+        console.error('Erro ao excluir condição:', erro);
+        alert('Não foi possível excluir a condição.');
+    }
+}
+
+
+/* ==========================================
+   CATÁLOGO DE ORIGENS
+========================================== */
+
+let origensCatalogo = [];
+let origemCatalogoEmEdicaoId = null;
+
+
+/* NOVA ORIGEM */
+
+function novaOrigemCatalogo() {
+
+    origemCatalogoEmEdicaoId = null;
+
+    $('form-origem-catalogo').reset();
+
+    $('titulo-form-origem').textContent =
+        'Cadastrar origem';
+
+    $('form-origem-catalogo').hidden = false;
+
+    $('nome-origem').focus();
+}
+
+
+/* EDITAR ORIGEM */
+
+function editarOrigemCatalogo(id) {
+
+    const origem = origensCatalogo.find(
+        o => String(o.id) === String(id)
+    );
+
+    if (!origem) {
+        alert('Origem não encontrada.');
+        return;
+    }
+
+    origemCatalogoEmEdicaoId = origem.id;
+
+    $('nome-origem').value =
+        origem.origem || '';
+
+    $('pericia-origem').value =
+        origem.periciaOrigem || '';
+
+    $('nome-poder-origem').value =
+        origem.nomePoderOrigem || '';
+
+    $('descricao-poder-origem').value =
+        origem.poderOrigem || '';
+
+    $('titulo-form-origem').textContent =
+        'Editar origem';
+
+    $('form-origem-catalogo').hidden = false;
+
+    $('nome-origem').focus();
+}
+
+
+/* CANCELAR */
+
+function cancelarFormularioOrigemCatalogo() {
+
+    origemCatalogoEmEdicaoId = null;
+
+    $('form-origem-catalogo').reset();
+
+    $('form-origem-catalogo').hidden = true;
+}
+
+
+/* SALVAR ORIGEM */
+
+$('form-origem-catalogo').addEventListener(
+    'submit',
+    async function(event) {
+
+        event.preventDefault();
+
+        const dados = {
+
+            origem:
+                $('nome-origem').value.trim(),
+
+            periciaOrigem:
+                $('pericia-origem').value.trim(),
+
+            nomePoderOrigem:
+                $('nome-poder-origem').value.trim(),
+
+            poderOrigem:
+                $('descricao-poder-origem').value.trim()
+        };
+
+        if (
+            !dados.origem ||
+            !dados.periciaOrigem ||
+            !dados.nomePoderOrigem ||
+            !dados.poderOrigem
+        ) {
+            alert('Preencha todos os campos.');
+            return;
+        }
+
+        const editando =
+            origemCatalogoEmEdicaoId !== null;
+
+        const url = editando
+            ? `/api/personagem/origem/${origemCatalogoEmEdicaoId}`
+            : '/api/personagem/origem';
+
+        try {
+
+            const resposta = await fetch(url, {
+
+                method: editando ? 'PUT' : 'POST',
+
+                headers: {
+                    'Content-Type':
+                        'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+
+                body: new URLSearchParams(dados)
+            });
+
+            if (!resposta.ok) {
+
+                const detalhe = await resposta.text();
+
+                throw new Error(
+                    `HTTP ${resposta.status}: ${detalhe}`
+                );
+            }
+
+            cancelarFormularioOrigemCatalogo();
+
+            catalogosCarregados.delete('origens');
+
+            await carregarCatalogo('origens');
+
+            alert(
+                editando
+                    ? 'Origem atualizada com sucesso!'
+                    : 'Origem cadastrada com sucesso!'
+            );
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao salvar origem:',
+                erro
+            );
+
+            alert(
+                'Não foi possível salvar a origem. ' +
+                'Confira o console.'
+            );
+        }
+
+    }
+);
+
+
+/* EXCLUIR ORIGEM */
+
+async function excluirOrigemCatalogo(id) {
+
+    const confirmado = confirm(
+        'Tem certeza de que deseja excluir esta origem?'
+    );
+
+    if (!confirmado) return;
+
+    try {
+
+        const resposta = await fetch(
+            `/api/personagem/origem/${id}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+        if (!resposta.ok) {
+
+            const detalhe = await resposta.text();
+
+            throw new Error(
+                `HTTP ${resposta.status}: ${detalhe}`
+            );
+        }
+
+        if (
+            String(origemCatalogoEmEdicaoId) === String(id)
+        ) {
+            cancelarFormularioOrigemCatalogo();
+        }
+
+        catalogosCarregados.delete('origens');
+
+        await carregarCatalogo('origens');
+
+        alert('Origem excluída com sucesso!');
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao excluir origem:',
+            erro
+        );
+
+        alert(
+            'Não foi possível excluir a origem.'
+        );
+    }
+}
+
+
+/* ==========================================
+   CATÁLOGO DE TRILHAS
+========================================== */
+
+let trilhasCatalogo = [];
+let trilhaCatalogoEmEdicaoId = null;
+
+
+/* NOVA TRILHA */
+
+function novaTrilhaCatalogo() {
+
+    trilhaCatalogoEmEdicaoId = null;
+
+    $('form-trilha-catalogo').reset();
+
+    $('titulo-form-trilha').textContent =
+        'Cadastrar trilha';
+
+    $('form-trilha-catalogo').hidden = false;
+
+    $('classe-trilha').focus();
+}
+
+
+/* EDITAR TRILHA */
+
+function editarTrilhaCatalogo(id) {
+
+    const trilha = trilhasCatalogo.find(
+        t => String(t.id) === String(id)
+    );
+
+    if (!trilha) {
+        alert('Trilha não encontrada.');
+        return;
+    }
+
+    trilhaCatalogoEmEdicaoId = trilha.id;
+
+    $('classe-trilha').value =
+        trilha.classePersonagem || '';
+
+    $('nome-trilha').value =
+        trilha.trilhaPersonagem || '';
+
+    $('habilidade-trilha').value =
+        trilha.nomeHabilidadeTrilhaPersonagem || '';
+
+    $('descricao-trilha').value =
+        trilha.descTrilhaPersonagem || '';
+
+    $('titulo-form-trilha').textContent =
+        'Editar trilha';
+
+    $('form-trilha-catalogo').hidden = false;
+
+    $('classe-trilha').focus();
+}
+
+
+/* CANCELAR */
+
+function cancelarFormularioTrilhaCatalogo() {
+
+    trilhaCatalogoEmEdicaoId = null;
+
+    $('form-trilha-catalogo').reset();
+
+    $('form-trilha-catalogo').hidden = true;
+}
+
+
+/* SALVAR TRILHA */
+
+$('form-trilha-catalogo').addEventListener(
+    'submit',
+    async function(event) {
+
+        event.preventDefault();
+
+        const dados = {
+
+            classePersonagem:
+                $('classe-trilha').value,
+
+            trilhaPersonagem:
+                $('nome-trilha').value.trim(),
+
+            nomeHabilidadeTrilhaPersonagem:
+                $('habilidade-trilha').value.trim(),
+
+            descTrilhaPersonagem:
+                $('descricao-trilha').value.trim()
+        };
+
+        if (
+            !dados.classePersonagem ||
+            !dados.trilhaPersonagem ||
+            !dados.nomeHabilidadeTrilhaPersonagem ||
+            !dados.descTrilhaPersonagem
+        ) {
+            alert('Preencha todos os campos.');
+            return;
+        }
+
+        const editando =
+            trilhaCatalogoEmEdicaoId !== null;
+
+        const url = editando
+            ? `/api/personagem/trilha/${trilhaCatalogoEmEdicaoId}`
+            : '/api/personagem/trilha';
+
+        try {
+
+            const resposta = await fetch(url, {
+
+                method: editando ? 'PUT' : 'POST',
+
+                headers: {
+                    'Content-Type':
+                        'application/x-www-form-urlencoded;charset=UTF-8'
+                },
+
+                body: new URLSearchParams(dados)
+            });
+
+            if (!resposta.ok) {
+
+                const detalhe = await resposta.text();
+
+                throw new Error(
+                    `HTTP ${resposta.status}: ${detalhe}`
+                );
+            }
+
+            cancelarFormularioTrilhaCatalogo();
+
+            catalogosCarregados.delete('trilhas');
+
+            await carregarCatalogo('trilhas');
+
+            alert(
+                editando
+                    ? 'Trilha atualizada com sucesso!'
+                    : 'Trilha cadastrada com sucesso!'
+            );
+
+        } catch (erro) {
+
+            console.error(
+                'Erro ao salvar trilha:',
+                erro
+            );
+
+            alert(
+                'Não foi possível salvar a trilha. ' +
+                'Confira o console.'
+            );
+        }
+    }
+);
+
+
+/* EXCLUIR TRILHA */
+
+async function excluirTrilhaCatalogo(id) {
+
+    const confirmado = confirm(
+        'Tem certeza de que deseja excluir esta trilha?'
+    );
+
+    if (!confirmado) return;
+
+    try {
+
+        const resposta = await fetch(
+            `/api/personagem/trilha/${id}`,
+            {
+                method: 'DELETE'
+            }
+        );
+
+        if (!resposta.ok) {
+
+            const detalhe = await resposta.text();
+
+            throw new Error(
+                `HTTP ${resposta.status}: ${detalhe}`
+            );
+        }
+
+        if (
+            String(trilhaCatalogoEmEdicaoId) === String(id)
+        ) {
+            cancelarFormularioTrilhaCatalogo();
+        }
+
+        catalogosCarregados.delete('trilhas');
+
+        await carregarCatalogo('trilhas');
+
+        alert('Trilha excluída com sucesso!');
+
+    } catch (erro) {
+
+        console.error(
+            'Erro ao excluir trilha:',
+            erro
+        );
+
+        alert(
+            'Não foi possível excluir a trilha.'
+        );
+    }
+}
+
+
+
+
+
+
 
 
 iniciar();

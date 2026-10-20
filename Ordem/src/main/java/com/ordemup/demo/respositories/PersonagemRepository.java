@@ -10,5 +10,7 @@ public interface PersonagemRepository extends CrudRepository<Personagem, Integer
 
 	Optional<Personagem> findById(Long id);
 
+	boolean existsById(Long personagemId);
+
 	
 }
