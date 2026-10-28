@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#09090d">
+  <title>Gerador de Personagens | Ordem Up</title>
+  <link rel="stylesheet" href="/css/gerador-personagem.css?v=1">
+  <script defer src="/js/gerador-personagem.js?v=1"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand" aria-label="Ordem Up, início">
+      <span class="brand-symbol" aria-hidden="true">✦</span>
+      <span class="brand-type"><strong>ORDEM <em>UP</em></strong><small>SISTEMA DE GERENCIAMENTO</small></span>
+    </a>
+    <nav class="top-nav" aria-label="Navegação principal">
+      <a href="/">⌂ <span>INÍCIO</span></a>
+      <a href="/personagem">♟ <span>PERSONAGENS</span></a>
+      <a href="/item">⚔ <span>ITENS</span></a>
+      <a href="/loja">▤ <span>LOJA</span></a>
+      <a class="selected" aria-current="page" href="/gerador-personagem">✦ <span>GERADOR</span></a>
+    </nav>
+    <div class="top-caption"><span class="online-dot"></span> ARQUIVO / NPCS</div>
+  </header>
+
+  <main class="app-main">
+    <div class="noise" aria-hidden="true"></div>
+    <section class="intro" aria-labelledby="main-title">
+      <div class="intro-main">
+        <p class="eyebrow"><span class="eyebrow-bar"></span> DEPARTAMENTO DE IDENTIDADES / ORDEM UP</p>
+        <h1 id="main-title">CADA ROSTO, <span>UMA HISTÓRIA.</span></h1>
+        <p class="subtitle">Gere personagens e NPCs únicos a partir do seu catálogo no PostgreSQL.<br class="desktop-break"> Um novo nome. Outra personalidade. Infinitas possibilidades.</p>
+      </div>
+      <div class="intro-stamp" aria-hidden="true">
+        <span>ARQUIVO</span><strong>NPC / 001</strong><span>ACESSO AUTORIZADO</span>
+      </div>
+    </section>
+
+    <div class="work-layout">
+      <aside class="controls-panel" aria-label="Opções de geração">
+        <div class="controls-head">
+          <div class="controls-head-title"><span class="hex-symbol" aria-hidden="true">⌘</span><div><span class="small-overline">CENTRAL DE CRIAÇÃO</span><h2>PAINEL DE GERAÇÃO</h2></div></div>
+          <span class="head-code">01 — 03</span>
+        </div>
+        <div class="controls-body">
+          <p class="control-section-tag"><span>01</span> DEFINIR PARÂMETROS</p>
+          <p class="control-copy">Escolha a faixa etária. As demais características serão sorteadas entre os registros do banco.</p>
+          <form id="form-gerador">
+            <div class="age-fields">
+              <label for="idade-min">IDADE MÍNIMA
+                <input id="idade-min" type="number" name="idadeMin" min="1" max="110" value="18" required>
+              </label>
+              <label for="idade-max">IDADE MÁXIMA
+                <input id="idade-max" type="number" name="idadeMax" min="1" max="110" value="60" required>
+              </label>
+            </div>
+            <p class="range-hint">FAIXA ATIVA <strong id="resumo-idade">18 — 60 ANOS</strong></p>
+            <div class="cut-divider" aria-hidden="true"><span></span></div>
+            <p class="control-section-tag"><span>02</span> GERAR IDENTIDADE</p>
+            <button id="btn-gerar" type="submit" class="action-button"><span class="dice-symbol" aria-hidden="true">⚄</span><span id="texto-gerar">GERAR PERSONAGEM</span><span aria-hidden="true">↗</span></button>
+            <button id="btn-exemplo" type="button" class="ghost-button">✧ VER EXEMPLO DE FICHA</button>
+          </form>
+          <div class="system-feedback" role="status" aria-live="polite">
+            <div class="feedback-icon" id="status-icon" aria-hidden="true">◈</div>
+            <div><span class="small-overline">STATUS DO SISTEMA</span><p id="status-texto">Prévia carregada. Gere para consultar seu banco de dados.</p></div>
+          </div>
+          <div class="control-footnote">GERAÇÃO ALEATÓRIA <span>✦</span> SEUS DADOS, NOVAS HISTÓRIAS</div>
+        </div>
+      </aside>
+
+      <section class="dossier" aria-label="Ficha do personagem">
+        <div class="dossier-topline">
+          <div class="dossier-top-title"><span class="red-square"></span><span>REGISTRO DE INDIVÍDUO</span><strong id="registro-numero"># DEMO</strong></div>
+          <span class="data-label" id="tipo-ficha">EXEMPLO VISUAL · NÃO SALVO</span>
+        </div>
+
+        <div class="identity-banner">
+          <div class="identity-info">
+            <span class="identity-label">FICHA DE IDENTIDADE <span>// 000-001</span></span>
+            <p class="micro-line">NOME COMPLETO</p>
+            <h2 id="ficha-nome">ÁUREA <span>FERREIRA</span></h2>
+            <p class="nome-meio" id="ficha-nome-meio">NOME DO MEIO: ELZA</p>
+            <div class="identity-tags"><span class="red-tag" id="tag-idade">21 ANOS</span><span class="dark-tag" id="tag-sotaque">SOTAQUE: BAIANO</span></div>
+          </div>
+          <div class="silhouette-panel" aria-hidden="true">
+            <div class="portrait-sun"></div>
+            <svg viewBox="0 0 220 235" class="avatar-svg" xmlns="http://www.w3.org/2000/svg"><path d="M53 220V183Q69 167 98 157V148Q81 139 78 118L73 101Q68 99 68 91L72 80Q66 29 109 28Q158 28 150 82L153 91Q152 101 146 105L140 123Q138 140 122 149L122 158Q161 167 178 184V220Z" fill="#07090d" stroke="#f6f6f6" stroke-width="3"/><path d="M70 86Q84 47 124 54L148 81L143 58L130 41Q90 27 73 59Z" fill="#07090d" stroke="#f6f6f6" stroke-width="2"/><path d="M100 147L122 147M88 162L109 190L132 164M95 109H104M119 109H129" stroke="#ea1830" stroke-width="2" fill="none"/><path d="M69 201L93 182L109 197L130 183L154 202" stroke="#f6f6f6" stroke-width="2" fill="none"/></svg>
+            <span class="portrait-corner tl"></span><span class="portrait-corner br"></span>
+            <span class="portrait-watermark">IDENTITY_01</span>
+          </div>
+          <span class="banner-watermark" aria-hidden="true">NPC</span>
+        </div>
+
+        <div class="dossier-contents">
+          <div class="metrics">
+            <div class="metric"><span class="metric-icon">♟</span><div><small>IDADE</small><strong id="info-idade">21 <em>ANOS</em></strong></div></div>
+            <div class="metric"><span class="metric-icon">↕</span><div><small>ALTURA</small><strong id="info-altura">1,55 <em>M</em></strong></div></div>
+            <div class="metric"><span class="metric-icon">▣</span><div><small>PESO</small><strong id="info-peso">55,0 <em>KG</em></strong></div></div>
+            <div class="metric"><span class="metric-icon">◉</span><div><small>SOTAQUE</small><strong class="metric-small" id="info-sotaque">BAIANO</strong></div></div>
+          </div>
+
+          <div class="sections-grid">
+            <article class="data-card personality-card">
+              <div class="card-heading"><span class="card-num">01</span><h3>PERFIL PSICOLÓGICO</h3><span class="corner-flare">✦</span></div>
+              <div class="field-group"><span class="value-label">PERSONALIDADE</span><p id="info-personalidade">Muito religioso, cita passagens sagradas</p></div>
+              <div class="field-pair"><div class="field-group"><span class="value-label">QUALIDADE</span><p id="info-qualidade">Honesto</p></div><div class="field-group"><span class="value-label">DEFEITO</span><p id="info-defeito">Ciúmes</p></div></div>
+            </article>
+
+            <article class="data-card appearance-card">
+              <div class="card-heading"><span class="card-num">02</span><h3>APARÊNCIA FÍSICA</h3><span class="corner-flare">◈</span></div>
+              <div class="mini-grid"><div class="field-group"><span class="value-label">CABELO</span><p id="info-cabelo">Castanho escuro</p></div><div class="field-group"><span class="value-label">PELE</span><p id="info-pele">Morena</p></div><div class="field-group"><span class="value-label">OLHOS</span><p id="info-olhos">Azuis</p></div><div class="field-group"><span class="value-label">EXPRESSÃO</span><p id="info-expressao">Pensativo</p></div></div>
+              <div class="highlight-detail"><span class="value-label">CARACTERÍSTICA MARCANTE</span><p id="info-marcante">Caolho</p></div>
+            </article>
+
+            <article class="data-card wardrobe-card">
+              <div class="card-heading"><span class="card-num">03</span><h3>VESTUÁRIO</h3><span class="corner-flare">▤</span></div>
+              <div class="wardrobe-grid"><div><span class="value-label">PARTE SUPERIOR</span><p id="info-camisa">Jaqueta jeans</p></div><div><span class="value-label">PARTE INFERIOR</span><p id="info-calca">Calça preta</p></div><div><span class="value-label">CALÇADO</span><p id="info-sapato">Sapato social preto</p></div></div>
+            </article>
+          </div>
+
+          <div class="dossier-bottom">
+            <div class="copy-note"><span class="red-spark">✦</span><span>REGISTRO DE USO NARRATIVO <small>O SORTEIO NÃO SALVA NADA NO BANCO.</small></span></div>
+            <div class="bottom-actions"><button id="btn-copiar" class="outline-action" type="button" title="Copiar as informações como texto">⧉ COPIAR FICHA</button><button id="btn-json" class="outline-action" type="button" title="Baixar os dados em JSON">↓ EXPORTAR JSON</button><button id="btn-refazer" class="mini-action" type="button">↻ GERAR OUTRO</button></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <footer class="bottom-bar"><span>✦ ORDEM UP <i>//</i> GERADOR DE PERSONAGENS</span><span>SEU MUNDO. SUAS HISTÓRIAS. SUAS REGRAS.</span></footer>
+    
+    <script>
+    
+    (() => {
+    	  'use strict';
+    	  const $ = (id) => document.getElementById(id);
+    	  const caminhoAPI = '/api/gerador-personagem/gerar';
+    	  const formatar = (valor, casas = 1) => new Intl.NumberFormat('pt-BR', {minimumFractionDigits: casas, maximumFractionDigits: casas}).format(Number(valor));
+    	  const texto = (valor) => valor === null || valor === undefined || String(valor).trim() === '' ? 'Não informado' : String(valor).trim();
+
+    	  // Dados fictícios para pré-visualização. Nunca apresentados como um sorteio do banco.
+    	  const exemplo = {
+    	    nome: 'Áurea', nomeMeio: 'Elza', sobreNome: 'Ferreira', idade: 21,
+    	    sotaque: 'Baiano', personalidade: 'Muito religioso, cita passagens sagradas',
+    	    qualidade: 'Honesto', defeito: 'Ciúmes', altura: 1.55, peso: 55.0,
+    	    corCabelo: 'Castanho escuro', corPele: 'Morena', corOlho: 'Azuis',
+    	    camisa: 'Jaqueta jeans', calca: 'Calça preta', sapato: 'Sapato social preto',
+    	    exprecaoRosto: 'Pensativo', caracteristicaMarcante: 'Caolho'
+    	  };
+
+    	  let ultimo = exemplo;
+    	  let demonstracao = true;
+    	  let numeroGerado = 0;
+    	  let gerando = false;
+
+    	  function atribuir(id, valor) { $(id).textContent = texto(valor); }
+    	  function mostrarStatus(mensagem, erro = false) {
+    	    $('status-texto').textContent = mensagem;
+    	    $('status-icon').textContent = erro ? '!' : '◈';
+    	    document.querySelector('.system-feedback').classList.toggle('error', erro);
+    	  }
+    	  function atualizarResumoIdade() {
+    	    $('resumo-idade').textContent = `${$('idade-min').value || '—'} — ${$('idade-max').value || '—'} ANOS`;
+    	  }
+    	  function mostrarPersonagem(personagem, exemploVisual = false) {
+    	    ultimo = personagem;
+    	    demonstracao = exemploVisual;
+    	    const primeiro = texto(personagem.nome);
+    	    const ultimoNome = texto(personagem.sobreNome);
+    	    $('ficha-nome').replaceChildren(document.createTextNode(primeiro.toLocaleUpperCase('pt-BR') + ' '));
+    	    const span = document.createElement('span');
+    	    span.textContent = ultimoNome.toLocaleUpperCase('pt-BR');
+    	    $('ficha-nome').appendChild(span);
+    	    atribuir('ficha-nome-meio', `NOME DO MEIO: ${texto(personagem.nomeMeio).toLocaleUpperCase('pt-BR')}`);
+    	    atribuir('tag-idade', `${texto(personagem.idade)} ANOS`);
+    	    atribuir('tag-sotaque', `SOTAQUE: ${texto(personagem.sotaque).toLocaleUpperCase('pt-BR')}`);
+    	    atribuir('info-idade', `${texto(personagem.idade)} ANOS`);
+    	    atribuir('info-altura', personagem.altura == null ? 'Não informado' : formatar(personagem.altura, 2) + ' M');
+    	    atribuir('info-peso', personagem.peso == null ? 'Não informado' : formatar(personagem.peso) + ' KG');
+    	    atribuir('info-sotaque', texto(personagem.sotaque).toLocaleUpperCase('pt-BR'));
+    	    const dados = {
+    	      'info-personalidade': personagem.personalidade,
+    	      'info-qualidade': personagem.qualidade,
+    	      'info-defeito': personagem.defeito,
+    	      'info-cabelo': personagem.corCabelo,
+    	      'info-pele': personagem.corPele,
+    	      'info-olhos': personagem.corOlho,
+    	      'info-expressao': personagem.exprecaoRosto,
+    	      'info-marcante': personagem.caracteristicaMarcante,
+    	      'info-camisa': personagem.camisa,
+    	      'info-calca': personagem.calca,
+    	      'info-sapato': personagem.sapato
+    	    };
+    	    Object.entries(dados).forEach(([id, valor]) => atribuir(id, valor));
+    	    $('registro-numero').textContent = exemploVisual ? '# DEMO' : `# ${String(numeroGerado).padStart(4, '0')}`;
+    	    $('tipo-ficha').textContent = exemploVisual ? 'EXEMPLO VISUAL · NÃO SALVO' : 'GERADO DO BANCO · NÃO SALVO';
+    	  }
+    	  function definirCarregamento(ativo) {
+    	    gerando = ativo;
+    	    $('btn-gerar').disabled = ativo;
+    	    $('btn-refazer').disabled = ativo;
+    	    $('texto-gerar').textContent = ativo ? 'GERANDO FICHA...' : 'GERAR PERSONAGEM';
+    	  }
+    	  async function gerar() {
+    	    if (gerando) return;
+    	    const minimo = Number($('idade-min').value);
+    	    const maximo = Number($('idade-max').value);
+    	    if (!Number.isInteger(minimo) || !Number.isInteger(maximo) || minimo < 1 || maximo > 110 || minimo > maximo) {
+    	      mostrarStatus('Confira a faixa etária: mínimo e máximo entre 1 e 110; mínimo menor ou igual ao máximo.', true);
+    	      $('idade-min').focus();
+    	      return;
+    	    }
+    	    definirCarregamento(true);
+    	    mostrarStatus('Consultando o catálogo e combinando características...');
+    	    try {
+    	      const params = new URLSearchParams({idadeMin: String(minimo), idadeMax: String(maximo)});
+    	      const resposta = await fetch(`${caminhoAPI}?${params.toString()}`, {headers:{'Accept':'application/json'}});
+    	      if (!resposta.ok) {
+    	        let mensagem = '';
+    	        try { const erro = await resposta.json(); mensagem = erro.message || erro.detail || ''; } catch (_) {}
+    	        throw new Error(`HTTP ${resposta.status}${mensagem ? ': ' + mensagem : ''}`);
+    	      }
+    	      const personagem = await resposta.json();
+    	      if (!personagem || typeof personagem !== 'object' || Array.isArray(personagem)) throw new Error('A API não retornou um personagem válido.');
+    	      if (!personagem.nome && !personagem.sobreNome) throw new Error('A API retornou um personagem sem nome.');
+    	      numeroGerado++;
+    	      mostrarPersonagem(personagem);
+    	      mostrarStatus('Novo personagem sorteado usando os registros do PostgreSQL.');
+    	    } catch (erro) {
+    	      console.error('Falha ao gerar personagem:', erro);
+    	      mostrarStatus(`Não foi possível gerar pelo banco (${erro.message}). Confira o servidor Spring Boot e os registros cadastrados.`, true);
+    	    } finally {
+    	      definirCarregamento(false);
+    	    }
+    	  }
+    	  function gerarTexto(p) {
+    	    return [
+    	      'ORDEM UP — FICHA DE NPC',
+    	      demonstracao ? '[EXEMPLO VISUAL]' : '[GERADO DO BANCO — NÃO SALVO]',
+    	      `Nome: ${[p.nome, p.nomeMeio, p.sobreNome].filter(Boolean).join(' ')}`,
+    	      `Idade: ${texto(p.idade)} anos`, `Altura: ${p.altura == null ? 'Não informado' : formatar(p.altura,2)+' m'}`,
+    	      `Peso: ${p.peso == null ? 'Não informado' : formatar(p.peso)+' kg'}`, `Sotaque: ${texto(p.sotaque)}`,
+    	      '', 'PERSONALIDADE',
+    	      `Personalidade: ${texto(p.personalidade)}`, `Qualidade: ${texto(p.qualidade)}`, `Defeito: ${texto(p.defeito)}`,
+    	      '', 'APARÊNCIA',
+    	      `Cabelo: ${texto(p.corCabelo)}`, `Pele: ${texto(p.corPele)}`, `Olhos: ${texto(p.corOlho)}`,
+    	      `Expressão: ${texto(p.exprecaoRosto)}`, `Característica marcante: ${texto(p.caracteristicaMarcante)}`,
+    	      '', 'VESTUÁRIO',
+    	      `Camisa: ${texto(p.camisa)}`, `Calça: ${texto(p.calca)}`, `Sapato: ${texto(p.sapato)}`
+    	    ].join('\n');
+    	  }
+    	  async function copiarFicha() {
+    	    const conteudo = gerarTexto(ultimo);
+    	    try {
+    	      if (navigator.clipboard && window.isSecureContext) {
+    	        await navigator.clipboard.writeText(conteudo);
+    	      } else {
+    	        const textarea = document.createElement('textarea');
+    	        textarea.value = conteudo;
+    	        textarea.style.position = 'fixed'; textarea.style.opacity = '0';
+    	        document.body.appendChild(textarea); textarea.select();
+    	        const sucesso = document.execCommand('copy');
+    	        textarea.remove();
+    	        if (!sucesso) throw new Error('Cópia não autorizada.');
+    	      }
+    	      mostrarStatus('Ficha copiada! Você pode colar no Obsidian, Discord ou onde preferir.');
+    	    } catch (e) {
+    	      mostrarStatus('Não foi possível copiar automaticamente; tente usar um navegador com permissão para a área de transferência.', true);
+    	    }
+    	  }
+    	  function exportarJson() {
+    	    const dados = {...ultimo, _origem: demonstracao ? 'exemplo_visual' : 'gerado_do_banco', _salvoNoBanco: false};
+    	    const blob = new Blob([JSON.stringify(dados,null,2)],{type:'application/json;charset=utf-8'});
+    	    const url = URL.createObjectURL(blob);
+    	    const ancora = document.createElement('a');
+    	    const nome = [ultimo.nome, ultimo.sobreNome].filter(Boolean).join('-').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9-]+/g,'-');
+    	    ancora.href = url;
+    	    ancora.download = `ordem-up-npc-${nome || 'personagem'}.json`;
+    	    document.body.appendChild(ancora); ancora.click(); ancora.remove();
+    	    setTimeout(() => URL.revokeObjectURL(url), 3000);
+    	    mostrarStatus('Arquivo JSON exportado. A exportação não altera o banco.');
+    	  }
+    	  $('form-gerador').addEventListener('submit', e => {e.preventDefault(); gerar();});
+    	  $('btn-refazer').addEventListener('click', gerar);
+    	  $('btn-exemplo').addEventListener('click', () => {mostrarPersonagem(exemplo,true); mostrarStatus('Exemplo visual carregado. Clique em Gerar Personagem para usar o banco.');});
+    	  $('btn-copiar').addEventListener('click', copiarFicha);
+    	  $('btn-json').addEventListener('click', exportarJson);
+    	  $('idade-min').addEventListener('input', atualizarResumoIdade);
+    	  $('idade-max').addEventListener('input', atualizarResumoIdade);
+    	  mostrarPersonagem(exemplo,true);
+    	  atualizarResumoIdade();
+    	})();
+
+    
+    </script>
+    
+  </main>
+</body>
+</html>
