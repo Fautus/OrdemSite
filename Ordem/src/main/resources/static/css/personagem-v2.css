@@ -1071,3 +1071,20 @@ textarea:focus-visible {
         0 100%
     );
 }
+
+/* Corrigir o container do elemento personalizado */
+
+#campo-elemento-ritual-outro {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    height: auto;
+    min-height: 0;
+}
+
+#elemento-ritual-outro {
+    display: block;
+    width: 100%;
+}

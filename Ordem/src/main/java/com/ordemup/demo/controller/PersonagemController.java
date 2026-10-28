@@ -240,18 +240,26 @@ public class PersonagemController {
     
     @PostMapping("/ritual")
     public Ritual novoRitual(
-    		@RequestParam String nomeRitual,
-    		@RequestParam String execucaoRitual,
-    		@RequestParam String alvoRitual,
-    		@RequestParam String duracaoRitual,
-    		@RequestParam String resistenciaRitual,
-    		@RequestParam String descRitual) {
-    	
-    	Ritual ritual = new Ritual(nomeRitual, execucaoRitual, alvoRitual, duracaoRitual, resistenciaRitual, descRitual);
-    	
-    	ritualRepository.save(ritual);
-    	
-    	return ritual;
+            @RequestParam String nomeRitual,
+            @RequestParam String execucaoRitual,
+            @RequestParam String alvoRitual,
+            @RequestParam String duracaoRitual,
+            @RequestParam String resistenciaRitual,
+            @RequestParam String descRitual,
+            @RequestParam(required = false) String elementoRitual) {
+
+        Ritual ritual = new Ritual(
+                nomeRitual,
+                execucaoRitual,
+                alvoRitual,
+                duracaoRitual,
+                resistenciaRitual,
+                descRitual
+        );
+
+        ritual.setElementoRitual(elementoRitual);
+
+        return ritualRepository.save(ritual);
     }
     
     @GetMapping("/ritual")
@@ -268,24 +276,30 @@ public class PersonagemController {
     
     @PutMapping("/ritual/{id}")
     public Ritual editarRitual(
-    		@PathVariable Long id, 
-    		@RequestParam String nomeRitual,
-    		@RequestParam String execucaoRitual,
-    		@RequestParam String alvoRitual,
-    		@RequestParam String duracaoRitual,
-    		@RequestParam String resistenciaRitual,
-    		@RequestParam String descRitual) {
-    	
-    	Ritual ritual = ritualRepository.findById(id).orElseThrow(() -> new RuntimeException("Ritual não encontrado"));
-    	
-    	ritual.setNomeRitual(nomeRitual);
-    	ritual.setExecucaoRitual(execucaoRitual);
-    	ritual.setAlvoRitual(alvoRitual);
-    	ritual.setDuracaoRitual(duracaoRitual);
-    	ritual.setResistenciaRitual(resistenciaRitual);
-    	ritual.setDescRitual(descRitual);
-    	
-    	return ritualRepository.save(ritual);
+            @PathVariable Long id,
+            @RequestParam String nomeRitual,
+            @RequestParam String execucaoRitual,
+            @RequestParam String alvoRitual,
+            @RequestParam String duracaoRitual,
+            @RequestParam String resistenciaRitual,
+            @RequestParam String descRitual,
+            @RequestParam(required = false) String elementoRitual) {
+
+        Ritual ritual = ritualRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Ritual não encontrado")
+                );
+
+        ritual.setNomeRitual(nomeRitual);
+        ritual.setExecucaoRitual(execucaoRitual);
+        ritual.setAlvoRitual(alvoRitual);
+        ritual.setDuracaoRitual(duracaoRitual);
+        ritual.setResistenciaRitual(resistenciaRitual);
+        ritual.setDescRitual(descRitual);
+
+        ritual.setElementoRitual(elementoRitual);
+
+        return ritualRepository.save(ritual);
     }
     
     //Fim ritual
@@ -297,16 +311,22 @@ public class PersonagemController {
     
     @PostMapping("/trilha")
     public Trilha novaTrilha(
-    		@RequestParam String classePersonagem,
-    		@RequestParam String trilhaPersonagem,
-    		@RequestParam String nomeHabilidadeTrilhaPersonagem,
-    		@RequestParam String descTrilhaPersonagem) {
-    	
-    	Trilha trilha = new Trilha(classePersonagem, trilhaPersonagem, nomeHabilidadeTrilhaPersonagem, descTrilhaPersonagem);
-    	
-    	trilhaRepository.save(trilha);
-    	
-    	return trilha;
+            @RequestParam String classePersonagem,
+            @RequestParam String trilhaPersonagem,
+            @RequestParam String nomeHabilidadeTrilhaPersonagem,
+            @RequestParam String descTrilhaPersonagem,
+            @RequestParam(required = false) Integer nexTrilha) {
+
+        Trilha trilha = new Trilha(
+                classePersonagem,
+                trilhaPersonagem,
+                nomeHabilidadeTrilhaPersonagem,
+                descTrilhaPersonagem
+        );
+
+        trilha.setNexTrilha(nexTrilha);
+
+        return trilhaRepository.save(trilha);
     }
     
     @GetMapping("/trilha")
@@ -323,20 +343,25 @@ public class PersonagemController {
     
     @PutMapping("/trilha/{id}")
     public Trilha editarTrilha(
-    		@PathVariable Long id,
-    		@RequestParam String classePersonagem,
-    		@RequestParam String trilhaPersonagem,
-    		@RequestParam String nomeHabilidadeTrilhaPersonagem,
-    		@RequestParam String descTrilhaPersonagem) {
-    	
-    	Trilha trilha = trilhaRepository.findById(id).orElseThrow(() -> new RuntimeException("Trilha não encontrada"));
-    	
-    	trilha.setClassePersonagem(classePersonagem);
-    	trilha.setTrilhaPersonagem(trilhaPersonagem);
-    	trilha.setNomeHabilidadeTrilhaPersonagem(nomeHabilidadeTrilhaPersonagem);
-    	trilha.setDescTrilhaPersonagem(descTrilhaPersonagem);
-    	
-    	return trilhaRepository.save(trilha);
+            @PathVariable Long id,
+            @RequestParam String classePersonagem,
+            @RequestParam String trilhaPersonagem,
+            @RequestParam String nomeHabilidadeTrilhaPersonagem,
+            @RequestParam String descTrilhaPersonagem,
+            @RequestParam(required = false) Integer nexTrilha) {
+
+        Trilha trilha = trilhaRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Trilha não encontrada")
+                );
+
+        trilha.setClassePersonagem(classePersonagem);
+        trilha.setTrilhaPersonagem(trilhaPersonagem);
+        trilha.setNomeHabilidadeTrilhaPersonagem(nomeHabilidadeTrilhaPersonagem);
+        trilha.setDescTrilhaPersonagem(descTrilhaPersonagem);
+        trilha.setNexTrilha(nexTrilha);
+
+        return trilhaRepository.save(trilha);
     }
     
     //Fim trilha

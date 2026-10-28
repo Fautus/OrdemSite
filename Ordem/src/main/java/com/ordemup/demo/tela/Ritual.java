@@ -34,6 +34,17 @@ public class Ritual {
 	@Column(unique = true,name = "desc_ritual", columnDefinition = "TEXT")
 	private String descRitual;
 	
+	@Column(name = "elemento_ritual", length = 100)
+	private String elementoRitual;
+	
+	public String getElementoRitual() {
+		return elementoRitual;
+	}
+
+	public void setElementoRitual(String elementoRitual) {
+		this.elementoRitual = elementoRitual;
+	}
+
 	public Ritual() {
 		// TODO Auto-generated constructor stub
 	}

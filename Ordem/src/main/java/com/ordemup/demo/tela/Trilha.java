@@ -29,6 +29,9 @@ public class Trilha {
 	@Column(unique = true)
 	private String descTrilhaPersonagem;
 	
+	@Column(name = "nex_trilha")
+	private Integer nexTrilha;
+	
 	public Trilha() {
 		
 	}
@@ -81,6 +84,15 @@ public class Trilha {
 	public void setDescTrilhaPersonagem(String descTrilhaPersonagem) {
 		this.descTrilhaPersonagem = descTrilhaPersonagem;
 	}
+
+	public Integer getNexTrilha() {
+		return nexTrilha;
+	}
+
+	public void setNexTrilha(Integer nexTrilha) {
+		this.nexTrilha = nexTrilha;
+	}
+	
 	
 	
 }

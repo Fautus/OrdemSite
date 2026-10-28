@@ -95,7 +95,7 @@
 					</div>
 					<div class="stat-row">
 						<span class="stat-icon green">➤</span><label
-							for="destreza-personagem">Destreza</label><input
+							for="destreza-personagem">Agilidade</label><input
 							id="destreza-personagem" class="stat-input" type="number" min="0"
 							value="0">
 					</div>
@@ -107,7 +107,7 @@
 					</div>
 					<div class="stat-row">
 						<span class="stat-icon purple">◉</span><label
-							for="vontade-personagem">Vontade</label><input
+							for="vontade-personagem">Presença</label><input
 							id="vontade-personagem" class="stat-input" type="number" min="0"
 							value="0">
 					</div>
@@ -405,19 +405,69 @@
 
     <!-- Formulário de cadastro e edição -->
     <form id="form-ritual" class="panel" hidden>
-        <h3 id="titulo-form-ritual">Cadastrar ritual</h3>
+       <h3 id="titulo-form-ritual">Cadastrar ritual</h3>
 
-        <label class="field-label" for="nome-ritual">
-            NOME DO RITUAL
-        </label>
-        <input id="nome-ritual" class="field"
-               type="text" required>
+<!-- NOME DO RITUAL -->
+<label class="field-label" for="nome-ritual">
+    NOME DO RITUAL
+</label>
 
-        <label class="field-label" for="execucao-ritual">
-            EXECUÇÃO
-        </label>
-        <input id="execucao-ritual" class="field"
-               type="text" required>
+<input
+    id="nome-ritual"
+    class="field"
+    type="text"
+    placeholder="Digite o nome do ritual"
+    required
+>
+
+<!-- ELEMENTO DO RITUAL -->
+<label class="field-label" for="elemento-ritual">
+    ELEMENTO DO RITUAL
+</label>
+
+<select id="elemento-ritual" class="field" required>
+    <option value="">Selecione o elemento</option>
+    <option value="Conhecimento">Conhecimento</option>
+    <option value="Energia">Energia</option>
+    <option value="Morte">Morte</option>
+    <option value="Sangue">Sangue</option>
+    <option value="Medo">Medo</option>
+    <option value="Intenção">Intenção</option>
+    <option value="Sinal">Sinal</option>
+    <option value="Outros">Outros (personalizado)</option>
+</select>
+
+<!-- ELEMENTO PERSONALIZADO -->
+<!-- ELEMENTO PERSONALIZADO -->
+<div id="campo-elemento-ritual-outro" hidden>
+
+    <label class="field-label" for="elemento-ritual-outro">
+        NOME DO ELEMENTO PERSONALIZADO
+    </label>
+
+    <input
+        id="elemento-ritual-outro"
+        class="field"
+        type="text"
+        maxlength="100"
+        placeholder="Digite o elemento personalizado"
+    >
+
+</div>
+
+<!-- EXECUÇÃO -->
+<label class="field-label" for="execucao-ritual">
+    EXECUÇÃO
+</label>
+
+<input
+    id="execucao-ritual"
+    class="field"
+    type="text"
+    required
+>
+        
+
 
         <label class="field-label" for="alvo-ritual">
             ALVO
@@ -836,18 +886,48 @@
 
         <!-- CLASSE -->
 
-        <label class="field-label" for="classe-trilha">
-            CLASSE DO PERSONAGEM
-        </label>
+       <!-- CLASSE -->
 
-        <select id="classe-trilha" class="field" required>
-            <option value="">Selecione uma classe</option>
-            <option value="Combatente">Combatente</option>
-            <option value="Especialista">Especialista</option>
-            <option value="Ocultista">Ocultista</option>
-        </select>
+<label class="field-label" for="classe-trilha">
+    CLASSE DO PERSONAGEM
+</label>
+
+<input
+    id="classe-trilha"
+    class="field"
+    type="text"
+    list="opcoes-classe-trilha"
+    placeholder="Selecione ou digite uma nova classe"
+    autocomplete="off"
+    required
+>
+
+<datalist id="opcoes-classe-trilha">
+    <option value="Combatente">
+    <option value="Especialista">
+    <option value="Ocultista">
+    <option value="Sobrevivente">
+    <option value="Mundano">
+</datalist>
 
         <!-- NOME DA TRILHA -->
+        
+        <!-- NEX DA TRILHA -->
+
+<label class="field-label" for="nex-trilha">
+    NEX DA HABILIDADE (%)
+</label>
+
+<input
+    id="nex-trilha"
+    class="field"
+    type="number"
+    min="0"
+    max="99"
+    step="1"
+    placeholder="Ex.: 10"
+    required
+>
 
         <label class="field-label" for="nome-trilha">
             NOME DA TRILHA
@@ -973,7 +1053,13 @@ async function carregarPericias() {
   try {
 	  const r = await fetch('/api/personagem/pericias');
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    periciasDisponiveis = await r.json();
+    periciasDisponiveis = (await r.json()).sort((a, b) => {
+        return (a.pericia || '').localeCompare(
+            b.pericia || '',
+            'pt-BR',
+            { sensitivity: 'base' }
+        );
+    });
   } catch (e) {
     console.error('Falha ao carregar catálogo de perícias:', e);
     $('campos-pericias').innerHTML = '<p class="muted">Não foi possível carregar as perícias. Confira a rota GET /api/pericia.</p>';
@@ -1348,10 +1434,21 @@ const configuracaoCatalogos = {
         total: 'total-rituais',
         nome: p => p.nomeRitual || 'Ritual sem nome',
         detalhes: p => [
-            p.execucaoRitual && `Execução: ${p.execucaoRitual}`,
-            p.alvoRitual && `Alvo: ${p.alvoRitual}`,
-            p.duracaoRitual && `Duração: ${p.duracaoRitual}`,
-            p.resistenciaRitual && `Resistência: ${p.resistenciaRitual}`,
+            p.elementoRitual &&
+                `Elemento: ${p.elementoRitual}`,
+
+            p.execucaoRitual &&
+                `Execução: ${p.execucaoRitual}`,
+
+            p.alvoRitual &&
+                `Alvo: ${p.alvoRitual}`,
+
+            p.duracaoRitual &&
+                `Duração: ${p.duracaoRitual}`,
+
+            p.resistenciaRitual &&
+                `Resistência: ${p.resistenciaRitual}`,
+
             p.descRitual
         ].filter(Boolean).join('\n')
     },
@@ -1412,9 +1509,15 @@ const configuracaoCatalogos = {
         total: 'total-trilhas',
         nome: p => p.trilhaPersonagem || p.nomeTrilha || 'Trilha sem nome',
         detalhes: p => [
-            p.classePersonagem && `Classe: ${p.classePersonagem}`,
+            p.classePersonagem &&
+                `Classe: ${p.classePersonagem}`,
+
+            p.nexTrilha != null &&
+                `NEX: ${p.nexTrilha}%`,
+
             p.nomeHabilidadeTrilhaPersonagem &&
                 `Habilidade: ${p.nomeHabilidadeTrilhaPersonagem}`,
+
             p.descTrilhaPersonagem
         ].filter(Boolean).join('\n')
     }
@@ -1476,6 +1579,16 @@ async function carregarCatalogo(tipo) {
         }
 
         const registros = await resposta.json();
+        
+        if (tipo === 'pericias') {
+            registros.sort((a, b) => {
+                return (a.pericia || '').localeCompare(
+                    b.pericia || '',
+                    'pt-BR',
+                    { sensitivity: 'base' }
+                );
+            });
+        }
         
         if (tipo === 'trilhas') {
             trilhasCatalogo = registros;
@@ -2103,10 +2216,31 @@ async function removerPoderParanormal(poderId) {
 let rituaisCatalogo = [];
 let ritualEmEdicaoId = null;
 
+function atualizarCampoElementoRitual() {
+    const seletor = $('elemento-ritual');
+    const campo = $('campo-elemento-ritual-outro');
+    const input = $('elemento-ritual-outro');
+
+    const personalizado = seletor.value === 'Outros';
+
+    campo.hidden = !personalizado;
+    input.required = personalizado;
+
+    if (!personalizado) {
+        input.value = '';
+    }
+}
+
+$('elemento-ritual').addEventListener(
+    'change',
+    atualizarCampoElementoRitual
+);
+
 function novoRitual() {
     ritualEmEdicaoId = null;
 
     $('form-ritual').reset();
+    atualizarCampoElementoRitual();
     $('titulo-form-ritual').textContent = 'Cadastrar ritual';
     $('form-ritual').hidden = false;
 
@@ -2124,6 +2258,28 @@ function editarRitual(id) {
     ritualEmEdicaoId = ritual.id;
 
     $('nome-ritual').value = ritual.nomeRitual || '';
+    const elementosFixos = [
+        'Conhecimento',
+        'Energia',
+        'Morte',
+        'Sangue',
+        'Medo',
+        'Intenção',
+        'Sinal'
+    ];
+
+    const elementoSalvo = (ritual.elementoRitual || '').trim();
+
+    if (elementosFixos.includes(elementoSalvo)) {
+        $('elemento-ritual').value = elementoSalvo;
+    } else if (elementoSalvo) {
+        $('elemento-ritual').value = 'Outros';
+        $('elemento-ritual-outro').value = elementoSalvo;
+    } else {
+        $('elemento-ritual').value = '';
+    }
+
+    atualizarCampoElementoRitual();
     $('execucao-ritual').value = ritual.execucaoRitual || '';
     $('alvo-ritual').value = ritual.alvoRitual || '';
     $('duracao-ritual').value = ritual.duracaoRitual || '';
@@ -2139,24 +2295,33 @@ function editarRitual(id) {
 function cancelarFormularioRitual() {
     ritualEmEdicaoId = null;
     $('form-ritual').reset();
+    atualizarCampoElementoRitual();
     $('form-ritual').hidden = true;
 }
 
 
 $('form-ritual').addEventListener('submit', async function(event) {
     event.preventDefault();
+    
+    const selecaoElemento = $('elemento-ritual').value;
 
-    const dados = {
-        nomeRitual: $('nome-ritual').value.trim(),
-        execucaoRitual: $('execucao-ritual').value.trim(),
-        alvoRitual: $('alvo-ritual').value.trim(),
-        duracaoRitual: $('duracao-ritual').value.trim(),
-        resistenciaRitual: $('resistencia-ritual').value.trim(),
-        descRitual: $('desc-ritual').value.trim()
-    };
+    const elementoRitual = selecaoElemento === 'Outros'
+        ? $('elemento-ritual-outro').value.trim()
+        : selecaoElemento;
+
+        const dados = {
+        	    elementoRitual: elementoRitual,
+        	    nomeRitual: $('nome-ritual').value.trim(),
+        	    execucaoRitual: $('execucao-ritual').value.trim(),
+        	    alvoRitual: $('alvo-ritual').value.trim(),
+        	    duracaoRitual: $('duracao-ritual').value.trim(),
+        	    resistenciaRitual: $('resistencia-ritual').value.trim(),
+        	    descRitual: $('desc-ritual').value.trim()
+        	};
 
     if (
         !dados.nomeRitual ||
+        !dados.elementoRitual ||
         !dados.execucaoRitual ||
         !dados.alvoRitual ||
         !dados.duracaoRitual ||
@@ -2929,6 +3094,9 @@ function editarTrilhaCatalogo(id) {
 
     $('nome-trilha').value =
         trilha.trilhaPersonagem || '';
+    
+    $('nex-trilha').value =
+        trilha.nexTrilha ?? '';
 
     $('habilidade-trilha').value =
         trilha.nomeHabilidadeTrilhaPersonagem || '';
@@ -2965,13 +3133,16 @@ $('form-trilha-catalogo').addEventListener(
 
         event.preventDefault();
 
-        const dados = {
+        const nexTexto = $('nex-trilha').value.trim();
 
+        const dados = {
             classePersonagem:
-                $('classe-trilha').value,
+                $('classe-trilha').value.trim(),
 
             trilhaPersonagem:
                 $('nome-trilha').value.trim(),
+
+            nexTrilha: nexTexto,
 
             nomeHabilidadeTrilhaPersonagem:
                 $('habilidade-trilha').value.trim(),
@@ -2981,14 +3152,26 @@ $('form-trilha-catalogo').addEventListener(
         };
 
         if (
-            !dados.classePersonagem ||
-            !dados.trilhaPersonagem ||
-            !dados.nomeHabilidadeTrilhaPersonagem ||
-            !dados.descTrilhaPersonagem
-        ) {
-            alert('Preencha todos os campos.');
-            return;
-        }
+        	    !dados.classePersonagem ||
+        	    !dados.trilhaPersonagem ||
+        	    !dados.nomeHabilidadeTrilhaPersonagem ||
+        	    !dados.descTrilhaPersonagem ||
+        	    nexTexto === ''
+        	) {
+        	    alert('Preencha todos os campos.');
+        	    return;
+        	}
+
+        	const nexNumero = Number(nexTexto);
+
+        	if (
+        	    !Number.isInteger(nexNumero) ||
+        	    nexNumero < 0 ||
+        	    nexNumero > 99
+        	) {
+        	    alert('O NEX deve ser um número inteiro entre 0 e 99.');
+        	    return;
+        	}
 
         const editando =
             trilhaCatalogoEmEdicaoId !== null;
